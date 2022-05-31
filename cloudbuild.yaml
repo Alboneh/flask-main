@@ -1,20 +1,13 @@
- steps:
- # Build the container image
- - name: 'gcr.io/cloud-builders/docker'
-   args: ['build', '-t', 'gcr.io/sharp-starlight-351610/flask-app', '.']
- # Push the container image to Container Registry
- - name: 'gcr.io/cloud-builders/docker'
-   args: ['push', 'gcr.io/sharp-starlight-351610/flask-app']
- # Deploy container image to Cloud Run
- - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-   entrypoint: gcloud
-   args:
-   - 'run'
-   - 'deploy'
-   - 'flask-app'
-   - '--image'
-   - 'gcr.io/sharp-starlight-351610/flask-app'
-   - '--region'
-   - 'REGION'
- images:
- - 'gcr.io/$PROJECT_ID/flask-app'
+steps:
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/sharp-starlight-351610/flask-app', '.']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/sharp-starlight-351610/flask-app']
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'flask-app', '--image', 'gcr.io/sharp-starlight-351610/flask-app', '--region', 'us-central1', '--platform', 'managed','--port','80']
+images:
+- gcr.io/sharp-starlight-351610/flask-app
