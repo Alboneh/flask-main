@@ -5,6 +5,7 @@ from util import Preprocessing
 from flask_jwt_extended import JWTManager,create_access_token,jwt_required,get_jwt_identity
 from database import init,getalluser,registerdb,logindb
 from flask_cors import CORS
+from waitress import serve
 
 
 #init flask and sql
@@ -109,12 +110,5 @@ def userlist():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 80)))
+    serve(app, host="0.0.0.0", port=int(os.environ.get('PORT', 80)))
     #$Env:PORT=4000
-    
-
-#@app.route('/predict', methods=['POST'])
-#def predictpost():
-#    model = preprocess.predict(request.form['key1'])
-#   return model
-#
