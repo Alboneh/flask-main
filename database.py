@@ -4,10 +4,10 @@ from flask_mysqldb import MySQL
 def init(app):
 
     
-    app.config['MYSQL_HOST'] = '34.134.181.229'
-    #app.config['MYSQL_UNIX_SOCKET'] = '/cloudsql/sharp-starlight-351610:us-central1:capstone-data'
-    app.config['MYSQL_USER'] = 'capstone-data'
-    app.config['MYSQL_PASSWORD'] = 'capstonebangkit80'
+    app.config['MYSQL_HOST'] = '35.222.163.11'
+    #app.config['MYSQL_UNIX_SOCKET'] = '/cloudsql/western-beanbag-351610:us-central1:capstonedatabase'
+    app.config['MYSQL_USER'] = 'capstonedatabase'
+    app.config['MYSQL_PASSWORD'] = 'bangkit3342'
     app.config['MYSQL_DB'] = 'flask-data'
     app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
     return MySQL(app)
