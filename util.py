@@ -2,16 +2,17 @@ from variables import *
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from keras.preprocessing.sequence import TimeseriesGenerator
 
 class Preprocessing:
-    def __init__(self, model_path, data_name = "Groceries_dataset.csv", columns_not_to_be_removed = columns_not_to_be_removed):
+    def __init__(self, model_path, data_name = "Groceries_dataset.csv", columns_not_to_be_removed = columns_not_to_be_removed, window_size = 30, batch_size = 32):
         self.columns_not_to_be_removed = columns_not_to_be_removed
         self.data_name = data_name
         self.model = tf.keras.models.load_model(model_path)
         self.data_asarray = None
         self.columns = None
         self.dates = None
+        self.window_size = window_size
+        self.batch_size = batch_size
 
     def sparse_data(self):
         raw_data = pd.read_csv(self.data_name)
@@ -33,18 +34,12 @@ class Preprocessing:
 
     def predict(self):
         self.sparse_data()
-        generator = TimeseriesGenerator(self.data_asarray, self.data_asarray, length = 14, batch_size = self.data_asarray.shape[0]*10)
-        X = generator[0][0]
-        X_new = self.data_asarray[-14:, :].copy()
 
-        X_last = np.copy(X[-1, :, :])
-        for _ in range(14):
-            prediction = self.model.predict(X_last[np.newaxis, :, :])
-            X_last  = np.concatenate([X_last, prediction])
-            X_last = X_last[1:]
+        forecast = self.model_forecast(self.model, self.data_asarray[714-self.window_size:-1], self.window_size, self.batch_size)
+        results = forecast.squeeze()
 
-        prediction_data = np.concatenate([X_new, X_last])
-        prediction_df = pd.DataFrame(prediction_data, columns=list(self.columns)).iloc[-14:, :]
+        prediction_df = pd.DataFrame(np.abs(np.round(results + 0.25)), columns=list(self.columns))
+        print(np.abs(np.round(results + 0.25)))
 
         pred_list = list()
         for column in prediction_df.columns:
@@ -61,3 +56,11 @@ class Preprocessing:
             pred_list.append(product_dict)
         
         return pred_list
+
+    def model_forecast(self, model, series, window_size, batch_size):
+        dataset = tf.data.Dataset.from_tensor_slices(series)
+        dataset = dataset.window(window_size, shift=1, drop_remainder=True)
+        dataset = dataset.flat_map(lambda w: w.batch(window_size))
+        dataset = dataset.batch(batch_size).prefetch(1)
+        forecast = model.predict(dataset)
+        return forecast
