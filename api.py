@@ -59,12 +59,15 @@ def predictByProductName(product_name):
     try:
         try:
             data = next(product for product in prediction_results if product["product_name"] == product_name)
+            copied_dict = data.copy()
         except:
             return jsonify(status_code=404, content = {"message": f"Product '{product_name}' doesn\'t exist"})
+            
+        #GET data from arg
         days = request.args.get('days', type = int)
         if (days != None):
-            newdata = data["predictions"][:days]
-            return jsonify(predictions=newdata)
+            copied_dict["predictions"] = copied_dict["predictions"][:days]
+            return copied_dict
         return data
     except Exception as e:
          err = jsonify(msg=f'{e}')
