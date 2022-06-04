@@ -57,26 +57,19 @@ def predict():
 @jwt_required()
 def predictByProductName(product_name):
     try:
-        #if method request is POST
-        if request.method == 'POST':
-            input_date = str(request.form['input_date'])
-            sold = float(request.form['sold'])
-            try:
-                data = next(product for product in prediction_results if product["product_name"] == product_name)
-            except:
-                return jsonify(status_code=404, content = {"message": f"Product '{product_name}' doesn\'t exist"})
-            prediction = next(item for item in data["predictions"] if item["date"] == input_date)
-            prediction["real"] = sold
-            return data
-            
-        #if method request is GET
         try:
             data = next(product for product in prediction_results if product["product_name"] == product_name)
             copied_dict = data.copy()
         except:
             return jsonify(status_code=404, content = {"message": f"Product '{product_name}' doesn\'t exist"})
-            
-        #GET data from arg
+        #if method request is POST
+        if request.method == 'POST':
+            input_date = str(request.form['input_date'])
+            sold = float(request.form['sold'])
+            prediction = next(item for item in data["predictions"] if item["date"] == input_date)
+            prediction["real"] = sold
+            return data
+        #GET
         days = request.args.get('days', type = int)
         if (days != None):
             copied_dict["predictions"] = copied_dict["predictions"][:days]
@@ -85,7 +78,7 @@ def predictByProductName(product_name):
     except Exception as e:
          err = jsonify(msg=f'{e}')
          return err
-         
+
 @app.route('/register', methods=['POST'])
 def register():
     username = request.form['name']
@@ -109,5 +102,5 @@ def userlist():
 
 if __name__ == '__main__':
     serve(app, host="0.0.0.0", port=int(os.environ.get('PORT', 80)))
-    #app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 80)))
+    #app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 80)))git
     #$Env:PORT=4000
