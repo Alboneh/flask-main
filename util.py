@@ -29,8 +29,9 @@ class Preprocessing:
                 sparse_data.drop(column, axis = 1, inplace = True)
 
         self.data_asarray = sparse_data.values
-        self.columns = sparse_data.columns
-        self.dates = [str(i) for i in sparse_data.index[-14:]]
+        self.columns = [i for i in sparse_data.columns]
+        self.columns[7] = "fruit-vegetable juice"
+        self.dates = [str(datetime.date.fromtimestamp(time.time() + 86400 * i)).replace("-", "/") for i in range(14)]
 
     def predict(self):
         self.sparse_data()
@@ -39,7 +40,6 @@ class Preprocessing:
         results = forecast.squeeze()
 
         prediction_df = pd.DataFrame(np.abs(np.round(results + 0.25)), columns=list(self.columns))
-        print(np.abs(np.round(results + 0.25)))
 
         pred_list = list()
         for column in prediction_df.columns:
