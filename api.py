@@ -53,6 +53,7 @@ def predict():
          err = jsonify(msg=f'{e}')
          return err
 
+
 @app.route("/predict/<product_name>", methods=['GET','POST'])
 @jwt_required()
 def predictByProductName(product_name):
