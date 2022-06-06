@@ -19,7 +19,7 @@ prediction_results = preprocess.predict()
 
 #JWT
 app.config["JWT_SECRET_KEY"] = "capstone-secret-key" 
-#app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=5)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=5)
 jwt = JWTManager(app)
 
 @app.route('/', methods=['GET'])
