@@ -65,4 +65,5 @@ class Preprocessing:
         dataset = dataset.flat_map(lambda w: w.batch(window_size))
         dataset = dataset.batch(batch_size).prefetch(1)
         forecast = model.predict(dataset)
+        
         return forecast
