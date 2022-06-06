@@ -53,36 +53,27 @@ def predict():
          err = jsonify(msg=f'{e}')
          return err
 
-@app.route("/predict/<product_name>", methods=['GET'])
+@app.route("/predict/<product_name>", methods=['GET','POST'])
 @jwt_required()
 def predictByProductName(product_name):
     try:
         try:
             data = next(product for product in prediction_results if product["product_name"] == product_name)
+            copied_dict = data.copy()
         except:
             return jsonify(status_code=404, content = {"message": f"Product '{product_name}' doesn\'t exist"})
+        #if method request is POST
+        if request.method == 'POST':
+            input_date = str(request.form['input_date'])
+            sold = float(request.form['sold'])
+            prediction = next(item for item in data["predictions"] if item["date"] == input_date)
+            prediction["real"] = sold
+            return data
+        #GET
         days = request.args.get('days', type = int)
         if (days != None):
-            newdata = data["predictions"][:days]
-            return jsonify(predictions=newdata)
-        return data
-    except Exception as e:
-         err = jsonify(msg=f'{e}')
-         return err
-
-@app.route("/<product_name>", methods=['POST'])
-@jwt_required()
-def input_product(product_name):
-    try:
-        input_date = str(request.form['input_date'])
-        sold = float(request.form['sold'])
-        try:
-            data = next(product for product in prediction_results if product["product_name"] == product_name)
-        except:
-            return jsonify(status_code=404, content = {"message": f"Product '{product_name}' doesn\'t exist"})
-        
-        prediction = next(item for item in data["predictions"] if item["date"] == input_date)
-        prediction["real"] = sold
+            copied_dict["predictions"] = copied_dict["predictions"][:days]
+            return copied_dict
         return data
     except Exception as e:
          err = jsonify(msg=f'{e}')
@@ -111,4 +102,5 @@ def userlist():
 
 if __name__ == '__main__':
     serve(app, host="0.0.0.0", port=int(os.environ.get('PORT', 80)))
+    #app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 80)))git
     #$Env:PORT=4000
