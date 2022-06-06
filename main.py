@@ -34,7 +34,6 @@ def input_product(product_name, input_date: str = Form(), sold: float = Form()):
     
     prediction = next(item for item in data["predictions"] if item["date"] == input_date)
     prediction["real"] = sold
-    print(data)
     
 
 if __name__ == "__main__":
