@@ -4,7 +4,7 @@ This repository contains the documentation for [Leftover](https://flask-app-vqs2
 
 ## 1. Overview
 
-    Millions of tons of food wasted yearly caused by excessively stocked supplies that quickly becomes non-edible 
+   Millions of tons of food wasted yearly caused by excessively stocked supplies that quickly becomes non-edible 
 that has to be thrown away. Here we see an opportunity of using ML as a key in supply chain.
     Leftover is application that trying to tackle this problem by obtaining Restaurant forecasting of the right 
 amount of food they have to be served and help restaurant to optimize their inventory, 
@@ -14,7 +14,7 @@ Leftover APi is Flask based API that handle all request that this application ne
 https://flask-app-vqs2yvkkxa-uc.a.run.app/
 
 ## 2. Authentication
-    To use majority of this API u need to have authentication token,Authentication token created using
+   To use majority of this API u need to have authentication token,Authentication token created using
 Json Web Token(JWT) that will be given everytime user login to application.
 
 
