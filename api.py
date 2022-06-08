@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 from flask import Flask,jsonify,request
 from util import Preprocessing
-from flask_jwt_extended import JWTManager,create_access_token,jwt_required,get_jwt_identity
+from flask_jwt_extended import JWTManager,create_access_token,jwt_required,get_jwt_identity,create_refresh_token
 from database import init,getalluser,registerdb,logindb
 from flask_cors import CORS
 from waitress import serve
@@ -19,7 +19,8 @@ prediction_results = preprocess.predict()
 
 #JWT
 app.config["JWT_SECRET_KEY"] = "capstone-secret-key" 
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=90)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=90)
 jwt = JWTManager(app)
 
 @app.route('/', methods=['GET'])
@@ -36,12 +37,20 @@ def login():
         user = logindb(mysql,email,pwd)
         if user != "":
             access_token = create_access_token(identity=email)
-            data = {"message": "Login Successful" , "user": user, "access_token" : access_token}
+            refresh_token = create_refresh_token(identity=email)
+            data = {"message": "Login Successful" , "user": user, "access_token" : access_token , "refresh_token" : refresh_token}
             return jsonify(data),200
         return jsonify({"msg": "username atau password salah"}), 401
     except Exception as e:
          err = jsonify(msg=f'{e}')
          return err
+
+@app.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    identity = get_jwt_identity()
+    access_token = create_access_token(identity=identity)
+    return jsonify(access_token=access_token)
 
 @app.route('/predict', methods=['GET'])
 @jwt_required()
@@ -91,14 +100,14 @@ def register():
          err = jsonify(msg=f'{e}')
          return err
  
-@app.route('/users',methods=['GET'])
-def userlist():
-    try:
-        user = getalluser(mysql)
-        return jsonify(user)
-    except Exception as e:
-         err = jsonify(msg=f'{e}')
-         return err
+# @app.route('/users',methods=['GET'])
+# def userlist():
+#     try:
+#         user = getalluser(mysql)
+#         return jsonify(user)
+#     except Exception as e:
+#          err = jsonify(msg=f'{e}')
+#          return err
 
 
 if __name__ == '__main__':
