@@ -6,6 +6,7 @@ from flask_jwt_extended import JWTManager,create_access_token,jwt_required,get_j
 from database import init,getalluser,registerdb,logindb
 from flask_cors import CORS
 from waitress import serve
+from flask_swagger_ui import get_swaggerui_blueprint
 
 
 #init flask and sql
@@ -22,6 +23,18 @@ app.config["JWT_SECRET_KEY"] = "capstone-secret-key"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=90)
 jwt = JWTManager(app)
+
+
+SWAGGER_URL = '/swagger'
+API_URL = '/swaggerfile/swagger.json'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Todo List API"
+    }
+)
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 @app.route('/', methods=['GET'])
 def index():
