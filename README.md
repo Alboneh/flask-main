@@ -19,7 +19,7 @@ Json Web Token(JWT) that will be given everytime user login to application.
 
 
 ## 3. Resource
-	This API is RESTful and arranged around resources. All requests must be made using authorization bearer token.
+This API is RESTful and arranged around resources. All requests must be made using authorization bearer token.
 
 ### 3.1. Users
 
@@ -51,6 +51,7 @@ Success Response :
 }
 ```
 
+<<<<<<< HEAD
 Possible error response: 
 ...
 {
@@ -60,6 +61,17 @@ Possible error response:
 
 
 ### Register
+=======
+Possible error response:
+```
+{
+    "msg": "Wrong email or password"
+}
+```
+
+### Register
+
+>>>>>>> c328b9b4aa27a51c4cf9a371fc14bbc5f33ee80d
 
 
 route '/login' (POST)
