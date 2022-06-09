@@ -23,7 +23,7 @@ def registerdb(mysql,username,email, pwd):
     cur = mysql.connection.cursor()
     user = cur.execute("SELECT * FROM user WHERE email=(%s)",(email,))
     if user > 0:
-        return jsonify({"msg":"Email already exist"})
+        return jsonify({"msg":"Email already exist"}),401
     cur.execute("INSERT INTO user(username, email, password) VALUES (%s, %s, %s)", (username,email, pwd))
     mysql.connection.commit()
     id = cur.lastrowid
