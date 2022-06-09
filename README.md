@@ -19,9 +19,39 @@ Json Web Token(JWT) that will be given everytime user login to application.
 
 
 ## 3. Resource
+	This API is RESTful and arranged around resources. All requests must be made using authorization bearer token.
 
-route '/' (GET)
-	di return hello world
+### 3.1. Users
+
+### Login
+login user to access other feature of this api (token will be created when user login)
+
+```
+POST https://flask-app-vqs2yvkkxa-uc.a.run.app/login
+```
+Data it need [Form]:
+
+| key        | Type   | Value                                     |
+| -----------|--------|-------------------------------------------------|
+| email      | string | email user use when register.             |
+| password   | string | password that user pick when register.    |    
+
+Success Response :
+
+```
+HTTP/1.1 201 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "token_type": "Bearer",
+  "access_token": {{access_token}},
+  "refresh_token": {{refresh_token}},
+  "scope": {{scope}},
+  "expires_at": {{expires_at}}
+}
+```
+
+
 
 route '/login' (POST)
 	login data untuk token
