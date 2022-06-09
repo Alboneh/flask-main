@@ -39,17 +39,26 @@ Data it need [Form]:
 Success Response :
 
 ```
-HTTP/1.1 201 OK
-Content-Type: application/json; charset=utf-8
-
 {
-  "token_type": "Bearer",
   "access_token": {{access_token}},
-  "refresh_token": {{refresh_token}},
-  "scope": {{scope}},
-  "expires_at": {{expires_at}}
+  "message": "Login Successful",
+  "user": [
+        {
+            "email": {{user_email}}},
+            "username": {{user_password}}}
+        }
+    ]
 }
 ```
+
+Possible error response:
+```
+{
+    "msg": "Wrong email or password"
+}
+```
+
+### Register
 
 
 
