@@ -23,5 +23,7 @@ All resource/route that Leftover APi use have been documented using Swagger UI i
 https://flask-app-vqs2yvkkxa-uc.a.run.app/doc
 
 ## 4. Deployment
+Leftover APi is deployed using google cloud run that use cloud build as ci/cd pipeline that connected to this main repository
 
+![plot](./static/cloudimage2.png)
 	
