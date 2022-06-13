@@ -6,12 +6,8 @@
     "description": "Api Documentation for Leftover API",
     "contact": {}
   },
-  "host": "flask-app-vqs2yvkkxa-uc.a.run.app",
   "basePath": "/",
   "securityDefinitions": {},
-  "schemes": [
-    "https"
-  ],
   "consumes": [
     "application/json"
   ],
