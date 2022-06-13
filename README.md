@@ -36,13 +36,20 @@ thereby lowering operational costs and help maximize profits.
     ```
   - Enable Cloud Run
   - select flask-app image container and deploy to cloud run 
-- ### 3. ci/cd pipeline with Cloud Build
+- ### 4. ci/cd pipeline with Cloud Build
   - Enable Cloud Build
   - create cloudbuild.yaml and write command to build new docker container,push it to container registry and run it everytime it trigger
   - open CloudBuild and select repository and cloudbuild.yaml as config
   - select trigger to everytime push happen in main branch
   - build cloudbuild trigger
-  - add permission to cloudbuild service acccount and run the trigger to automate deployment 
+  - add permission to cloudbuild service acccount and run the trigger to automate deployment
+ 
+- ### 5. Create Documentation using Swagger UI
+  - Create all available request url in POSTMAN and save it to Collection
+  - export Collection to SwaggerHub and turn it into yaml
+  - edit Response and UI in Swagger Editor
+  - export swagger into json and save it into flask directory
+  - create endpoint to load swagger in flask
 
 ## 3. Resource
 All resource/route that Leftover APi use have been documented using Swagger UI in:
