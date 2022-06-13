@@ -10,6 +10,18 @@ that has to be thrown away. Here we see an opportunity of using ML as a key in s
 amount of food they have to be served and help restaurant to optimize their inventory, 
 thereby lowering operational costs and help maximize profits.
 
+## 2. How to run?
+ This API has been deployed using google cloud (Cloud Run) u can access it here:
+  ```
+   https://flask-app-vqs2yvkkxa-uc.a.run.app/
+  ```
+  If u want to run it locally u need to:
+  - Clone this repository `https://github.com/Alboneh/flask-main.git`
+  - Open terminal and create venv using `python -m venv venv`
+  - Install all requirement with `pip install -r requirements.txt`
+  - Run `python api.py` in terminal to run flask
+  - use url `127.0.0.1` to access all api endpoint
+
 ## Cloud Computing Documentation
 
 ![plot](./static/cloudimage2.png)
