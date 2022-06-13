@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">leftover</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="input_product_sales">Input Product Sales</string>
+    <string name="product_name">Product Name :</string>
+    <string name="Meat">Meat</string>
+    <string name="formatDate">01/01/2015</string>
+    <string name="input_date">Input Date</string>
+    <string name="today_sold_or_ran_out">Today sold out or run out</string>
+    <string name="et_email">Please fill out this form with your email</string>
+    <string name="et_password">Please fill out this form with minimum of 6 characther</string>
+    <string name="email_not_valid">Email not valid</string>
+    <string name="email_must_not_empty">Email must not empty</string>
+    <string name="must_not_empty">Must Not Empty</string>
+    <string name="must_six_char">Password Must Be At Least 6 Character</string>
+    <string name="name_must_not_empty">Name must not empty</string>
+</resources>
