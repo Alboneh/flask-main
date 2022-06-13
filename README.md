@@ -1,4 +1,4 @@
-# Bangkit Capstone Project C22-PS152 API Documentation
+# Bangkit Capstone Project C22-PS152 Documentation
 
 This repository contains the documentation for [LeftOver](https://flask-app-vqs2yvkkxa-uc.a.run.app/) API.
 
@@ -38,18 +38,50 @@ thereby lowering operational costs and help maximize profits.
 ## Machine Learning Documentation
 <p>The process of Data Preparation and Modeling can be accessed in <a href="https://colab.research.google.com/drive/1cCAh3e3iVQRfrrMAU6q_aY36ZBpgxVvP?usp=sharing">this Google Colaboratory</a></p>
 <ol>
-	<li><h3>Load <a href="https://github.com/Alboneh/flask-main/blob/main/Groceries_dataset.csv">Dataset</a> and Import Necessary Modules</h3></li>
-	<p>Load the Grocery Store dataset and import the required modules which are NumPy, Pandas, and Matplotlib</p>
-	<li><h3>Do Data Preprocessing and Exploratory Data Analysis<h3></li>
-	<p>The dataset received should be processed first before considered ready to feed into Machine Learning model. Handling missing values and dropping unnecessary column needs to be done for the data to be relevant. Then followed by windowing the dataset, and splitting it into 80% of training and 20% of testing data.</p>
-	<li><h3>Modeling and Hyperparameter Tuning</h3></li>
-	<p>By importing TensorFlow libraries, now we are able to build the model architecure. To handle time series data, we need layers that's good at memorizing sequential data, such as Recurrent Neural Network and Long Short-Term Memory</p>
-		<p>Hyperparameter Tuning also conducted, and iteratively improve on architecture complexity like the amount of layers and neurons with different activation function and Learning Rate Scheduler to pick the best learning rate with the lowest loss.</p>
-	<li><h3>Testing Prediction Performance</h3></li>
-		<p>After the model is ready, we have to test the model to see how it performs on the testing dataset. And the result was pretty good with the Mean Absolue Error as the metric that was ranging from 1% to 2.5%</p>
-		<li><h3>Convert model into H5 Format</h3></li>
-		<p>The previous model then was converted into H5 format so it can be loaded using TensorFlow load_model and store it into a different variable, so it can be integrated with the API we built.</p>
+  <li><h3>Load <a href="https://github.com/Alboneh/flask-main/blob/main/Groceries_dataset.csv">Dataset</a> and Import Necessary Modules</h3></li>
+    <p>Load the Grocery Store dataset and import the required modules which are NumPy, Pandas, and Matplotlib</p>
+  <li><h3>Do Data Preprocessing and Exploratory Data Analysis<h3></li>
+    <p>The dataset received should be processed first before considered ready to feed into Machine Learning model. Handling missing values and dropping unnecessary column needs to be done for the data to be relevant. Then followed by windowing the dataset, and splitting it into 80% of training and 20% of testing data.</p>
+  <li><h3>Modeling and Hyperparameter Tuning</h3></li>
+    <p>By importing TensorFlow libraries, now we are able to build the model architecure. To handle time series data, we need layers that's good at memorizing sequential data, such as Recurrent Neural Network and Long Short-Term Memory</p>
+    <p>Hyperparameter Tuning also conducted, and iteratively improve on architecture complexity like the amount of layers and neurons with different activation function and Learning Rate Scheduler to pick the best learning rate with the lowest loss.</p>
+    <image src="./static/model_summary.png" style="height: 400px;">
+  <li><h3>Testing Prediction Performance</h3></li>
+    <p>After the model is ready, we have to test the model to see how it performs on the testing dataset. And the result was pretty good with the Mean Absolue Error as the metric that was ranging from 1% to 2.5%</p>
+  <li><h3>Convert model into H5 Format</h3></li>
+    <p>The previous model then was converted into H5 format so it can be loaded using TensorFlow load_model and store it into a different variable, so it can be integrated with the API we built.</p>
 </ol>
+		
+## Mobile Development Documentation
+<p>Here are the features we developed for the Android Application:</p>
+<ul>
+  <li>Splash screen, in this application there is a splashscreen before entering the main page</li>
+  <li>Login Page, you can login using the registered email and password</li>
+  <li>Register Page, you can register yourself by fill out the name,email,password form</li>
+  <li>Home Page, you can see the list of product and their prediction for today sales</li>
+  <li>Detail Page, contains the detail of the product and their prediction up to 14 days</li>
+  <li>Add Sales Page, you can input the amount of sold out product in here</li>
+</ul>
+		
+<p>The architecture we developed for this app:</p>
+<image src="./static/leftover-architecture-design.jpeg" style="height:450px;">
+		
+<p>Dependencies needed:</p>
+<ul>
+  <li>Livedata</li>
+  <li>Navigation Component</li>
+  <li>Kotlinx-Coroutines</li>
+  <li>Ok Http 3</li>
+  <li>Retrofit</li>
+  <li>Add Sales Page, you can input the amount of sold out product in here</li>
+</ul>
+
+<p>Prerequisites:</p>
+<ul>
+	<li>Android Studio</li>
+	<li>JRE (Java Runtime Environment)</li>
+	<li>JDK (Java Development Kit)</li>
+</ul>
 
 ## Cloud Computing Documentation
 
