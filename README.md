@@ -12,6 +12,8 @@ thereby lowering operational costs and help maximize profits.
 
 ## Cloud Computing Documentation
 
+![plot](./static/cloudimage2.png)
+
 - ### 1. Creating Flask App to load model from Machine Learning
   - save model and dataset for Machine learning in same directory as `api.py`
   - Load the model in `api.py`
@@ -48,6 +50,4 @@ https://flask-app-vqs2yvkkxa-uc.a.run.app/doc
 
 ## 4. Deployment
 Leftover APi is deployed using google cloud run that use cloud build as ci/cd pipeline that connected to this main repository
-
-![plot](./static/cloudimage2.png)
 	
