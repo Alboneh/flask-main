@@ -36,6 +36,7 @@ thereby lowering operational costs and help maximize profits.
   - use url `http://127.0.0.1/` to access all api endpoint
 
 ## Machine Learning Documentation
+<p>The process of Data Preparation and Modeling can be accessed in <a href="https://colab.research.google.com/drive/1cCAh3e3iVQRfrrMAU6q_aY36ZBpgxVvP?usp=sharing"></a>this Google Colaboratory</p>
 <ol>
 	<li><h3>Load <a href="https://github.com/Alboneh/flask-main/blob/main/Groceries_dataset.csv">Dataset</a> and Import Necessary Modules</h3></li>
 	<p>Load the Grocery Store dataset and import the required modules which are NumPy, Pandas, and Matplotlib</p>
