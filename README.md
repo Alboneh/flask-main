@@ -1,6 +1,19 @@
-# bangkit-capstone-project API Documentation
+# Bangkit Capstone Project C22-PS152 API Documentation
 
-This repository contains the documentation for [Leftover](https://flask-app-vqs2yvkkxa-uc.a.run.app/) API.
+This repository contains the documentation for [LeftOver](https://flask-app-vqs2yvkkxa-uc.a.run.app/) API.
+
+<h2>Table of Contents</h2>
+<ol>
+  <li>Overview</li>
+  <li>How to run?</li>
+  <ul>
+    <li>Machine Learning Documentation</li>
+    <li>Mobile Development Documentation</li>
+    <li>Cloud Computing Documentation</li>
+  </ul>
+  <li>Resource</li>
+  <li>Team Member of C22-PS152</li>
+</ol>
 
 ## 1. Overview
 
@@ -21,6 +34,21 @@ thereby lowering operational costs and help maximize profits.
   - Install all requirement with `pip install -r requirements.txt`
   - Run `python api.py` in terminal to run flask
   - use url `http://127.0.0.1/` to access all api endpoint
+
+## Machine Learning Documentation
+<ol>
+	<li><h3>Load <a href="https://github.com/Alboneh/flask-main/blob/main/Groceries_dataset.csv">Dataset</a> and Import Necessary Modules</h3></li>
+	<p>Load the Grocery Store dataset and import the required modules which are NumPy, Pandas, and Matplotlib</p>
+	<li><h3>Do Data Preprocessing and Exploratory Data Analysis<h3></li>
+	<p>The dataset received should be processed first before considered ready to feed into Machine Learning model. Handling missing values and dropping unnecessary column needs to be done for the data to be relevant. Then followed by windowing the dataset, and splitting it into 80% of training and 20% of testing data.</p>
+	<li><h3>Modeling and Hyperparameter Tuning</h3></li>
+	<p>By importing TensorFlow libraries, now we are able to build the model architecure. To handle time series data, we need layers that's good at memorizing sequential data, such as Recurrent Neural Network and Long Short-Term Memory</p>
+		<p>Hyperparameter Tuning also conducted, and iteratively improve on architecture complexity like the amount of layers and neurons with different activation function and Learning Rate Scheduler to pick the best learning rate with the lowest loss.</p>
+	<li><h3>Testing Prediction Performance</h3></li>
+		<p>After the model is ready, we have to test the model to see how it performs on the testing dataset. And the result was pretty good with the Mean Absolue Error as the metric that was ranging from 1% to 2.5%</p>
+		<li><h3>Convert model into H5 Format</h3></li>
+		<p>The previous model then was converted into H5 format so it can be loaded using TensorFlow load_model and store it into a different variable, so it can be integrated with the API we built.</p>
+</ol>
 
 ## Cloud Computing Documentation
 
@@ -73,7 +101,13 @@ thereby lowering operational costs and help maximize profits.
        ```
     http://127.0.0.1/doc
     ```
-
-## 4. Deployment
-Leftover APi is deployed using google cloud run that use cloud build as ci/cd pipeline that connected to this main repository
+## 4. Team Member of C22-PS152
+<ol>
+	<li>Daniel Bernard Sahala Simamora - M2115G1456</li>
+	<li>Naufal Daffa Abdurahman - M2314G2724</li>
+	<li>Naufal Ramadhan - A2143H1638</li>
+	<li>Nikita Dewi Kurnia Salwa - A2183F1776</li>
+	<li>Daniel Hendra Andriyanto - C7004F0150</li>
+	<li>Ibrahim Bin Purwanto - C2183F1777</li>
+<ol>
 	
