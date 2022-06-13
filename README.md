@@ -15,6 +15,7 @@ thereby lowering operational costs and help maximize profits.
 ![plot](./static/cloudimage2.png)
 
 - ### 1. Creating Flask App to load model from Machine Learning
+  - Create simple flask api with the name `api.py`
   - save model and dataset for Machine learning in same directory as `api.py`
   - Load the model in `api.py`
   - create endpoint and test model by running flask using `python api.py` to run it locally and getting predicted data using local ip.
