@@ -10,13 +10,37 @@ that has to be thrown away. Here we see an opportunity of using ML as a key in s
 amount of food they have to be served and help restaurant to optimize their inventory, 
 thereby lowering operational costs and help maximize profits.
 
-Leftover APi is Flask based API that handle all request that this application need. All requests are made to endpoints beginning:
-https://flask-app-vqs2yvkkxa-uc.a.run.app/
+## Cloud Computing Documentation
 
-## 2. Authentication
-   To use majority of this API u need to have authentication token,Authentication token created using
-Json Web Token(JWT) that will be given everytime user login to application.
-
+- ### 1. Creating Flask App to load model from Machine Learning
+  - save model and dataset for Machine learning in same directory as `api.py`
+  - Load the model in `api.py`
+  - create endpoint and test model by running flask using `python api.py` to run it locally and getting predicted data using local ip.
+- ### 2. creatign Login and Register with Authentication in flask
+  - Creating simple Login and Register using dummy database
+  - create Json Web Token(JWT) to authenticate login and register
+  - create JWT requirement to request prediction
+  - change dummy database to cloud sql database
+  - Test database to user login and register
+  - Test authentication JWT using POSTMAN
+- ### 3. Google Cloud Deployment
+  - create Dockerfile and requirement.txt to store depedency and place it in root directory
+  - clone flask repository `https://github.com/Alboneh/flask-main.git` in cloud shell
+  - run this command to build container and push it to container registry
+      ```
+    docker build -t flask-app:v1 .
+    docker tag flask-app:v1 gcr.io/western-beanbag-351610/flask-app:v1
+    docker push gcr.io/western-beanbag-351610/flask-app:v1
+    ```
+  - Enable Cloud Run
+  - select flask-app image container and deploy to cloud run 
+- ### 3. ci/cd pipeline with Cloud Build
+  - Enable Cloud Build
+  - create cloudbuild.yaml and write command to build new docker container,push it to container registry and run it everytime it trigger
+  - open CloudBuild and select repository and cloudbuild.yaml as config
+  - select trigger to everytime push happen in main branch
+  - build cloudbuild trigger
+  - add permission to cloudbuild service acccount and run the trigger to automate deployment 
 
 ## 3. Resource
 All resource/route that Leftover APi use have been documented using Swagger UI in:
