@@ -20,7 +20,7 @@ thereby lowering operational costs and help maximize profits.
   - Open terminal and create venv using `python -m venv venv`
   - Install all requirement with `pip install -r requirements.txt`
   - Run `python api.py` in terminal to run flask
-  - use url `127.0.0.1` to access all api endpoint
+  - use url `http://127.0.0.1/` to access all api endpoint
 
 ## Cloud Computing Documentation
 
