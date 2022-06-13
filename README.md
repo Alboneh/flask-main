@@ -18,7 +18,7 @@ thereby lowering operational costs and help maximize profits.
   - save model and dataset for Machine learning in same directory as `api.py`
   - Load the model in `api.py`
   - create endpoint and test model by running flask using `python api.py` to run it locally and getting predicted data using local ip.
-- ### 2. creatign Login and Register with Authentication in flask
+- ### 2. creating Login and Register with Authentication in flask
   - Creating simple Login and Register using dummy database
   - create Json Web Token(JWT) to authenticate login and register
   - create JWT requirement to request prediction
