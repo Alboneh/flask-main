@@ -51,15 +51,15 @@ thereby lowering operational costs and help maximize profits.
   - export swagger into json and save it into flask directory
   - create endpoint to load swagger in flask
 
-## 3. Resource
-All resource/route that Leftover APi use have been documented using Swagger UI in:
+### 3. Resource
+  - All resource/route that Leftover APi use have been documented using Swagger UI in:
       ```
-      https://flask-app-vqs2yvkkxa-uc.a.run.app/doc
-      ```
-      or if u want to run it locally using `python api.py`
+    https://flask-app-vqs2yvkkxa-uc.a.run.app/doc/
+    ```
+  - if u want to run it locally using `python api.py` then:
        ```
     http://127.0.0.1/doc
-      ```
+    ```
 
 ## 4. Deployment
 Leftover APi is deployed using google cloud run that use cloud build as ci/cd pipeline that connected to this main repository
