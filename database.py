@@ -4,9 +4,9 @@ from flask_mysqldb import MySQL
 def init(app):
 
     
-    app.config['MYSQL_HOST'] = '35.225.58.130'
+    app.config['MYSQL_HOST'] = '34.70.144.254'
     #app.config['MYSQL_UNIX_SOCKET'] = '/cloudsql/western-beanbag-351610:us-central1:capstonedatabase2'
-    app.config['MYSQL_USER'] = 'capstonedatabase'
+    app.config['MYSQL_USER'] = 'capstonedatabase23'
     app.config['MYSQL_PASSWORD'] = 'bangkit3342'
     app.config['MYSQL_DB'] = 'flask-data'
     app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
