@@ -1,0 +1,28 @@
+
+      <main>
+        <section class="input_section">
+           <h2>Masukkan FIle</h2>
+           <form  [formGroup]="form" (ngSubmit)="addData()" id="inputBook">
+              <div class="form-group input">
+                 <label for="inputBookTitle">Input</label>
+                 <input name="inputBookTitle" formControlName="inputBookTitle" id="inputBookTitle" type="file" required />
+              </div>
+           </form>
+        </section>
+
+        <section class="book_shelf_container">
+           <div class="book_shelf book_read">
+              <h2>Hasil Prediksi</h2>
+              <div *ngFor="let item of data;" id="incompleteBookshelfList" class="book_list">
+                 <article class="book_item">
+                    <h3>ID buku : {{item.data}}</h3>
+                    <div class="action">
+                       <button (click)="deleteData(item.Id)" class="red" >Hapus</button>
+                    </div>
+                 </article>
+                 <!-- element is the result of the showBook function -->
+              </div>
+           </div>
+        </section>
+     </main>
+     <!-- js -->

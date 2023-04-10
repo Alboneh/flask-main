@@ -1,0 +1,52 @@
+version: "3.6"
+services:
+  pythonapi:
+    container_name: python_api
+    build: "."
+    command: /app/watchdog.sh
+    volumes:
+         - .:/app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+  golangapi:
+    container_name: golangapi
+    build: "./api"  
+    restart: unless-stopped
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./api:/app
+    command: ["sh", "-c", "/app/watcher.sh & /docker-start"]
+  nginx:
+    build: "./nginx"
+    ports:
+      - "80:80"
+  db:
+    image: postgres
+    container_name: local_pgdatabase
+    restart: always
+    environment:
+         - POSTGRES_PASSWORD=root
+         - POSTGRES_USER=root
+         - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: local_pgadmin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  local_pgdata:
+  pgadmin-data:

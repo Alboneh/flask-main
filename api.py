@@ -11,7 +11,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 #init flask and sql
 app = Flask(__name__)
 CORS(app)
-mysql = init(app)
+mysql = init()
 
 #load tensorflow model
 preprocess = Preprocessing("model.h5")
@@ -56,7 +56,6 @@ def login():
          return err
 
 @app.route('/predict', methods=['GET'])
-@jwt_required()
 def predict():
     try:
         data = {'success': 'true','data': prediction_results}                                                                                                                                                                                                                                                 
@@ -67,7 +66,6 @@ def predict():
 
 
 @app.route("/predict/<product_name>", methods=['GET','POST'])
-@jwt_required()
 def predictByProductName(product_name):
     try:
         try:
@@ -112,8 +110,19 @@ def userlist():
          err = jsonify(msg=f'{e}'),500
          return err
 
+@app.route('/upload',methods=['POST'])
+def upload():
+    filename = "Groceries_dataset.csv"
+    file = request.files['file']
+    try:
+        file.save(os.path.join("./", filename))
+        return jsonify("upload success"),200
+    except Exception as e:
+         err = jsonify(msg=f'{e}'),500
+         return err 
+
 
 if __name__ == '__main__':
-    serve(app, host="0.0.0.0", port=int(os.environ.get('PORT', 80)))
+    serve(app, host="0.0.0.0", port=int(os.environ.get('PORT', 3000)))
     #app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 80)))
     #$Env:PORT=4000
