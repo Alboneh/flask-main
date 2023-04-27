@@ -2,10 +2,9 @@ version: "3.6"
 services:
   pythonapi:
     container_name: python_api
-    build: "."
-    command: /app/watchdog.sh
+    build: "./pyfile"
     volumes:
-         - .:/app
+         - ./pyfile:/app
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -17,7 +16,7 @@ services:
       - "3030:3030"
     volumes:
       - ./api:/app
-    command: ["sh", "-c", "/app/watcher.sh & /docker-start"]
+      - ./docker-compose.yaml:/app/config/docker-compose.yaml
   nginx:
     build: "./nginx"
     ports:
