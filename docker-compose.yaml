@@ -16,11 +16,10 @@ services:
       - "3030:3030"
     volumes:
       - ./api:/app
-      - ./docker-compose.yaml:/app/config/docker-compose.yaml
-  nginx:
-    build: "./nginx"
-    ports:
-      - "80:80"
+  # nginx:
+  #   build: "./nginx"
+  #   ports:
+  #     - "80:80"
   db:
     image: postgres
     container_name: local_pgdatabase

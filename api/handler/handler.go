@@ -39,7 +39,7 @@ func Get(c *fiber.Ctx) error {
 	return c.JSON("Hello-World")
 }
 
-//m
+// m
 func Login(c *fiber.Ctx) error {
 
 	data := Logininfo{}
@@ -50,8 +50,11 @@ func Login(c *fiber.Ctx) error {
 			"message": "Can't parsing the data",
 		})
 	}
-	a, b := login2(data)
-	if !a {
+
+	log.Println(data.Name, data.Password)
+
+	token, err := login(data)
+	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"success": false,
 			"message": "Login failed",
@@ -61,25 +64,21 @@ func Login(c *fiber.Ctx) error {
 		"success":      true,
 		"message":      "Login Successful",
 		"user":         data.Name,
-		"access_token": b,
+		"access_token": token,
 	})
 }
 
 // hmsswww
-func login2(data Logininfo) (bool, string) {
+func login(data Logininfo) (string, error) {
 
-	response := []Logininfo{}
+	response := Logininfo{}
 
 	query := fmt.Sprintf(`SELECT name,password FROM "user" WHERE name = '%s' AND password = '%s'`, data.Name, data.Password)
 
-	err := pgsql.Select(&response, query)
+	err := pgsql.Get(&response, query)
 	if err != nil {
 		log.Println(err)
-		return false, ""
-	}
-
-	if len(response) < 1 {
-		return false, ""
+		return "", err
 	}
 
 	// Create the Claims
@@ -96,9 +95,9 @@ func login2(data Logininfo) (bool, string) {
 	t, err := token.SignedString([]byte("secret"))
 	if err != nil {
 		log.Printf("token.SignedString: %v", err)
-		return false, ""
+		return "", err
 	}
-	return true, t
+	return t, nil
 }
 
 var client = &http.Client{}

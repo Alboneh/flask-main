@@ -1,8 +1,22 @@
 # github.com/andybalholm/brotli v1.0.5
 ## explicit; go 1.12
 github.com/andybalholm/brotli
+# github.com/bep/godartsass v0.16.0
+## explicit; go 1.15
+# github.com/bep/golibsass v1.1.0
+## explicit; go 1.13
+# github.com/cli/safeexec v1.0.1
+## explicit; go 1.15
+# github.com/cosmtrek/air v1.43.0
+## explicit; go 1.20
+# github.com/creack/pty v1.1.18
+## explicit; go 1.13
 # github.com/eyesore/go-watch-docker v1.19.5
 ## explicit
+# github.com/fatih/color v1.15.0
+## explicit; go 1.17
+# github.com/fsnotify/fsnotify v1.6.0
+## explicit; go 1.16
 # github.com/gofiber/fiber/v2 v2.43.0
 ## explicit; go 1.20
 github.com/gofiber/fiber/v2
@@ -12,6 +26,8 @@ github.com/gofiber/fiber/v2/utils
 # github.com/gofiber/jwt/v3 v3.3.7
 ## explicit; go 1.16
 github.com/gofiber/jwt/v3
+# github.com/gohugoio/hugo v0.111.3
+## explicit; go 1.18
 # github.com/golang-jwt/jwt/v4 v4.5.0
 ## explicit; go 1.16
 github.com/golang-jwt/jwt/v4
@@ -20,6 +36,8 @@ github.com/golang-jwt/jwt/v4
 github.com/google/uuid
 # github.com/howeyc/fsnotify v0.9.0
 ## explicit
+# github.com/imdario/mergo v0.3.15
+## explicit; go 1.13
 # github.com/jmoiron/sqlx v1.3.5
 ## explicit; go 1.10
 github.com/jmoiron/sqlx
@@ -37,12 +55,16 @@ github.com/lib/pq/scram
 # github.com/mattn/go-colorable v0.1.13
 ## explicit; go 1.15
 github.com/mattn/go-colorable
-# github.com/mattn/go-isatty v0.0.17
+# github.com/mattn/go-isatty v0.0.18
 ## explicit; go 1.15
 github.com/mattn/go-isatty
 # github.com/mattn/go-runewidth v0.0.14
 ## explicit; go 1.9
 github.com/mattn/go-runewidth
+# github.com/pelletier/go-toml v1.9.5
+## explicit; go 1.12
+# github.com/pelletier/go-toml/v2 v2.0.7
+## explicit; go 1.16
 # github.com/philhofer/fwd v1.1.2
 ## explicit; go 1.15
 github.com/philhofer/fwd
@@ -59,6 +81,10 @@ github.com/savsgio/dictpool
 # github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee
 ## explicit; go 1.20
 github.com/savsgio/gotils/strconv
+# github.com/spf13/afero v1.9.5
+## explicit; go 1.16
+# github.com/tdewolff/parse/v2 v2.6.5
+## explicit; go 1.13
 # github.com/tinylib/msgp v1.1.8
 ## explicit; go 1.15
 github.com/tinylib/msgp/msgp
@@ -74,8 +100,12 @@ github.com/valyala/fasthttp/stackless
 # github.com/valyala/tcplisten v1.0.0
 ## explicit; go 1.12
 github.com/valyala/tcplisten
-# golang.org/x/sys v0.6.0
+# golang.org/x/sys v0.8.0
 ## explicit; go 1.17
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+# golang.org/x/text v0.9.0
+## explicit; go 1.17
+# google.golang.org/protobuf v1.30.0
+## explicit; go 1.11

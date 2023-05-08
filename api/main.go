@@ -22,7 +22,7 @@ func main() {
 	}))
 	app.Get("/predict", api.Predict)
 	app.Get("/predict/:product_name", api.PredictProduct)
-	app.Post("/predict", api.UploadFIle)
+	// app.Post("/predict", api.UploadFIle)
 
 	app.Listen(":3030")
 }

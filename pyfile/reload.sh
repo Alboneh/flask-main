@@ -12,7 +12,7 @@ PID=$!
 while true
 do
   echo "Watching for changes..."
-  watchdog-observe /app /docker-start.py
+  inotifywait -r -e modify,create,delete --exclude '\./vendor/.*' /app
 
   # Send a SIGTERM signal to the process
   echo "Stopping the process..."

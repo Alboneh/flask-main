@@ -4,4 +4,4 @@ CREATE TABLE IF NOT EXISTS "user" (
   password VARCHAR(90) NOT NULL
 );
 
-INSERT INTO "user" (id,name,password) VALUES (1,'admin','admin') ON CONFLICT DO UPDATE;
+INSERT INTO "user" (id,name,password) VALUES (1,'admin','admin');
