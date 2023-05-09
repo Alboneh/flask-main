@@ -37,12 +37,14 @@ def registerdb(mysql,username,email, pwd):
         "data":userdetail
     })
 
-def logindb(mysql,email,password):
+def logindb(mysql, email, password):
     cur = mysql.cursor()
-    user = cur.execute('SELECT name,password FROM "user" where name= (%s) and password=(%s)',(email,password))
-    if len(user) > 0:
-            login = cur.fetchall()
-            cur.close()
-            return login
+    cur.execute('SELECT name, password FROM "user" WHERE name = (%s) AND password = (%s)', (email, password))
+    user = cur.fetchall()
     cur.close()
+    
+    if user is not None and len(user) > 0:
+        login = user
+        return login
+    
     return ""

@@ -168,10 +168,10 @@ label {
 .form-group{
     margin-top: 10px;
 }
-button {
-    padding: 10px;
-    margin-top: 10px;
-}
+// button {
+//     padding: 10px;
+//     margin-top: 10px;
+// }
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
@@ -196,7 +196,7 @@ button {
   border-radius: 10px;
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
   width: 600px;
-  height: 260px;
+  height: auto;
   background-color: #ffffff;
   padding: 10px 30px 40px;
 }
@@ -231,24 +231,25 @@ button {
   color: #a3a3a3;
 }
 
-.btn {
-  text-decoration: none;
-  background-color: #005af0;
-  color: #ffffff;
-  padding: 10px 20px;
-  border: none;
-  outline: none;
-  transition: 0.3s;
+// .btn {
+//   text-decoration: none;
+//   background-color: #005af0;
+//   color: #ffffff;
+//   transition: 0.3s;
+// }
+
+.btn-class{
+    width: 20px;
 }
 
-.btn:hover{
-  text-decoration: none;
-  background-color: #ffffff;
-  color: #005af0;
-  padding: 10px 20px;
-  border: none;
-  outline: 1px solid #010101;
-}
+// .btn:hover{
+//   text-decoration: none;
+//   background-color: #ffffff;
+//   color: #005af0;
+//   padding: 10px 20px;
+//   border: none;
+//   outline: 1px solid #010101;
+// }
 .form input {
   margin: 10px 0;
   width: 100%;

@@ -1,28 +1,50 @@
 
       <main>
         <section class="input_section">
-           <h2>Masukkan FIle</h2>
-           <form  [formGroup]="form" (ngSubmit)="addData()" id="inputBook">
+           <h2>File Prediksi</h2>
+           <div *ngIf="displayFile">
+            <a href="{{apiUrl}}/download" download>Groceries_dataset.csv</a>
+            <button (click)="toggleFormVisibility()" class="btn btn-danger px-2" style="margin-left: 10px;">x</button>
+          </div>
+           <div *ngIf="!displayFile">
+              <form (ngSubmit)="uploadFile($event)">
+                <div class="mb-3">
+                  <label for="formFile" class="form-label">Input csv</label>
+                  <input class="form-control" type="file" id="formFile">
+                </div>
+                <button class="btn btn-primary p-1 px-3" type="submit">Upload</button>
+              </form>
+            <!-- <form  id="inputBook">
               <div class="form-group input">
                  <label for="inputBookTitle">Input</label>
-                 <input name="inputBookTitle" formControlName="inputBookTitle" id="inputBookTitle" type="file" required />
+                 <input name="inputBookTitle" id="inputBookTitle" type="file" required />
               </div>
-           </form>
+           </form> -->
+           </div>
         </section>
 
         <section class="book_shelf_container">
-           <div class="book_shelf book_read">
-              <h2>Hasil Prediksi</h2>
-              <div *ngFor="let item of data;" id="incompleteBookshelfList" class="book_list">
-                 <article class="book_item">
-                    <h3>ID buku : {{item.data}}</h3>
-                    <div class="action">
-                       <button (click)="deleteData(item.Id)" class="red" >Hapus</button>
-                    </div>
-                 </article>
-                 <!-- element is the result of the showBook function -->
+         <div class="book_shelf book_read card-container mx-auto">
+            <h2>Hasil Prediksi Produk</h2>
+            <div class="card mb-3" *ngFor="let item of data">
+              <div class="card-body">
+                <h2 class="card-title">{{ item.product_name.toUpperCase()}}</h2>
+                <p class="card-text">This Week Sell Prediction: {{ getForecastSum(item) }}</p>
+                <a class="btn btn-primary float-right p-1 px-3" (click)="item.expanded = !item.expanded">
+                  <i class="fa" [ngClass]="{'fa-chevron-down': !item.expanded, 'fa-chevron-up': item.expanded}">Detail</i>
+                </a>
+                <div *ngIf="item.expanded" >
+                  <div class="card mb-3 mt-2" *ngFor="let prediction of item.predictions">
+                     <div class="card-body">
+                        <p class="card-text">
+                           <b>Date:</b> {{ prediction.date }} | <b>Forecast:</b> {{ prediction.forecast }} items | <b>Real:</b> {{ prediction.real }}
+                         </p>
+                     </div>
+                  </div>
+                </div>
               </div>
-           </div>
+            </div>
+          </div>
         </section>
      </main>
      <!-- js -->

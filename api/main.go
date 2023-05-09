@@ -15,6 +15,8 @@ func main() {
 
 	app.Get("/", api.Get)
 	app.Post("/login", api.Login)
+	app.Post("/register", api.Register)
+	app.Get("/download", api.Download)
 
 	// JWT Middleware
 	app.Use(jwtware.New(jwtware.Config{
@@ -22,7 +24,8 @@ func main() {
 	}))
 	app.Get("/predict", api.Predict)
 	app.Get("/predict/:product_name", api.PredictProduct)
-	// app.Post("/predict", api.UploadFIle)
+	app.Post("/upload", api.UploadFIle)
+	app.Get("/check", api.Checkfile)
 
 	app.Listen(":3030")
 }

@@ -5,6 +5,7 @@ services:
     build: "./pyfile"
     volumes:
          - ./pyfile:/app
+         - ./file:/app/file
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -16,6 +17,7 @@ services:
       - "3030:3030"
     volumes:
       - ./api:/app
+      - ./file:/app/file
   # nginx:
   #   build: "./nginx"
   #   ports:

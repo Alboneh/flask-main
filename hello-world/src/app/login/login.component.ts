@@ -1,7 +1,8 @@
-import { HttpParams, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup , Validators } from '@angular/forms';
+import { UntypedFormGroup,UntypedFormBuilder } from '@angular/forms';
 import { Router  } from '@angular/router';
+import { LoginserviceService } from './service/loginservice.service';
 
 @Component({
   selector: 'app-login',
@@ -9,35 +10,31 @@ import { Router  } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  public token: any;
-  form: FormGroup;
-  constructor(public fb: FormBuilder,private http: HttpClient , private router: Router) {
-    this.form = fb.group({
-      name: '',
-      password: ''
-    });
-   }
+  public formGroup: UntypedFormGroup;
 
-  ngOnInit(): void {
-    this.form = new FormGroup({
-      name: new FormControl(''),
-      password: new FormControl(''),
+  constructor(private http: HttpClient , private router: Router,  private formBuilder: UntypedFormBuilder, private loginService: LoginserviceService) {
+    this.formGroup = this.formBuilder.group({
+      name: [null],
+      password: [null],
     });
   }
 
-  submit(){
-    const headers = { 'Content-Type': 'application/json'};
-    const body = { name: this.form.value.name, password: this.form.value.password };
-    this.http.post('http://localhost:3030/login',body,{headers}).subscribe((response : any) => {
-      this.token = response['access_token']
-      if(this.token != "" || this.token != undefined) {
-        this.router.navigate(['home']);
-      }
-    });
+  ngOnInit(): void {}
+
+  loginAction(event: Event): void {
+    event.preventDefault();
+    let name = this.formGroup.get('name')?.value;
+    console.log(name);
+    let password = this.formGroup.get('password')?.value;
+    this.loginService.login(name, password).subscribe(
+      res => {
+        this.loginService.handleLoginResponse(res);
+      },
+    );
   }
 
-  gettoken(){
-    return this.token
+  get form() {
+    return this.formGroup.controls
   }
 
 }

@@ -1,84 +1,141 @@
-import { HttpParams, HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup , Validators } from '@angular/forms';
-import { LoginComponent } from '../login/login.component';
 import { Router  } from '@angular/router';
+import { LoginserviceService } from '../login/service/loginservice.service';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
+interface Prediction {
+  date: string;
+  forecast: number;
+  real: string;
+}
+
+interface Data {
+  predictions: Prediction[];
+  product_name: string;
+}
+
+interface ResponseAPi {
+  data: Data[];
+  success: string;
+}
+
+interface CheckFile {
+  success : boolean;
+  message : string;
+}
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  form: FormGroup;
-  constructor(public fb: FormBuilder,private http: HttpClient, private login: LoginComponent , private router: Router) {
-    this.form = fb.group({
-      inputBookTitle: '',
-      editidbuku: '',
-      editjudulbuku: ''
-    });
-    console.log(this.login.gettoken())
-    this.checklogin()
-    this.load()
-  }
-  checklogin(){
-    if (this.login.token == "" || this.login.token == undefined) {
-      this.router.navigate(['login']);
+  public data :any[] = [];
+  public apiUrl = 'http://localhost:3030';
+  public displayFile : boolean;
+  public token : string | null;
+  public headers : HttpHeaders;
+  public formGroup: UntypedFormGroup;
+  constructor(private http: HttpClient, private loginService: LoginserviceService , private router: Router,  private formBuilder: UntypedFormBuilder) {
+    if (!this.loginService.isAuthenticated()) {
+      this.router.navigate(['/login']);
     }
-    
-  }   
-  submit(){
-    const formData = new FormData();
-    // formData.append('file', this.myForm.get('fileSource'));
-   
-    this.http.post('http://localhost:8001/upload.php', formData)
-      .subscribe(res => {
-        console.log(res);
-        alert('Uploaded Successfully.');
-      })
+    this.displayFile = false;
+    this.token = localStorage.getItem('access_token');
+    this.headers = new HttpHeaders({ 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    this.formGroup = this.formBuilder.group({
+      file: [null],
+    });
+  } 
+  load(){
+    this.http.get<ResponseAPi>(`${this.apiUrl}/predict`, { headers: this.headers }).subscribe(
+      (response : ResponseAPi) => {
+        this.data = response.data;
+    });
   }
 
-  data :any[] = []
-  load(){
-    console.log(this.login.token)
-    const headers = new HttpHeaders({ 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.login.token}`
-    })
-    this.http.get('http://localhost/api/predict', { headers: headers }).subscribe((response : any) => {
-     this.data = response;
-     console.log(response);
-    });
+  getForecastSum(item: Data): number {
+    return item.predictions.reduce((sum, prediction) => sum + prediction.forecast, 0);
   }
-  addData(){
-    const headers = { 'Content-Type': 'application/json'};
-    const body = { item: this.form.value.inputBookTitle };
-    this.http.post('https://192.53.116.40/api/',body,{headers}).subscribe((response) => {
-      alert(response);
-      this.load()
-    });
+
+  checkFile(){
+    this.http.get<CheckFile>(`${this.apiUrl}/check`, { headers: this.headers }).subscribe((res : CheckFile) => {
+      if (res.success) {
+        this.load();
+        this.displayFile = true;
+      }
+    }) 
   }
-  editData(){
-    const id = {params: new HttpParams().set('id', this.form.value.editidbuku)}
-    const body = { item: this.form.value.editjudulbuku };
-    this.http.put('https://192.53.116.40/api/update',body,id).subscribe((response) => {
-      alert(response);
-      this.load()
-    });
+
+  toggleFormVisibility() {
+    this.displayFile = !this.displayFile;
   }
-  deleteData(data : any){
-    const id = {params: new HttpParams().set('id', data)}
-    this.http.delete('https://192.53.116.40/api/delete',id).subscribe((response) => {
-      alert(response);
-      this.load()
-    });
+
+  uploadFile(event: any): void {
+    const fileInput = event.target as HTMLInputElement;
+    const file: File | null = fileInput.files?.[0] || null;
+    const formData: FormData = new FormData();
+    
+    if (file) {
+      formData.append('file', file);
+
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+        
+    
+      const options = { headers: headers };
+
+      this.http.post(`${this.apiUrl}/upload`, formData , options).subscribe(
+        (response: any) => {
+          // Handle the response
+          window.location.reload();
+        },
+        (error: any) => {
+          // Handle the error
+          console.error(error);
+        }
+      );
+    }else {
+      console.log("NO file Selected")
+    }
   }
+
+  // uploadFile(event: Event): void {
+  //   // Get the form control value
+  // const fileControlValue = this.formGroup.get('file')?.value;
+
+  // // Check if the value is not null
+  // if (fileControlValue) {
+  //   // Cast the value to File type
+  //   const file: File = fileControlValue as File;
+
+  //   // Create a new FormData object
+  //   const formData = new FormData();
+
+  //   // Append the file to the FormData object
+  //   formData.append('file', file);
+  
+  //  const headers = new HttpHeaders().set('Content-Type', 'multipart/form-data').set('Authorization', `Bearer ${this.token}`);
+  
+  //   const options = { headers: headers };
+  
+  //   this.http.post<CheckFile>(`${this.apiUrl}/upload`, formData, options).subscribe(
+  //     (response: CheckFile) => {
+  //       if (response.success) {
+  //         window.location.reload();
+  //       }
+  //     },
+  //   );
+  // }
+  // }
+
+  
+
   ngOnInit(): void {
-    this.form = new FormGroup({
-      inputBookTitle: new FormControl(''),
-      editjudulbuku: new FormControl(''),
-      editidbuku: new FormControl(''),
-    });
+    this.checkFile();
   }
 
 }

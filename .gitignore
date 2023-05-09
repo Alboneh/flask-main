@@ -1,6 +1,5 @@
 .ipynb_checkpoints
 prediction_df.csv
-Groceries_dataset.csv
 __pycache__
 convert result to json.ipynb
 sparse_data.csv

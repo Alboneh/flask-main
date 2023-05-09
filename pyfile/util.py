@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 
 class Preprocessing:
-    def __init__(self, model_path, data_name = "Groceries_dataset.csv", columns_not_to_be_removed = columns_not_to_be_removed, window_size = 30, batch_size = 32):
+    def __init__(self, model_path, data_name = "file/Groceries_dataset.csv", columns_not_to_be_removed = columns_not_to_be_removed, window_size = 30, batch_size = 32):
         self.columns_not_to_be_removed = columns_not_to_be_removed
         self.data_name = data_name
         self.model = tf.keras.models.load_model(model_path)
