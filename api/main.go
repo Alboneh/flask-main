@@ -26,6 +26,7 @@ func main() {
 	app.Get("/predict/:product_name", api.PredictProduct)
 	app.Post("/upload", api.UploadFIle)
 	app.Get("/check", api.Checkfile)
+	app.Get("/users", api.GetUser)
 
 	app.Listen(":3030")
 }

@@ -31,6 +31,13 @@ type Registerinfo struct {
 	Password string `json:"password" db:"password"`
 }
 
+type UserGetinfo struct {
+	ID       int    `json:"id" db:"id"`
+	Name     string `json:"name" db:"name"`
+	Email    string `json:"email" db:"email"`
+	Password string `json:"password" db:"password"`
+}
+
 type PredictData struct {
 	Data []struct {
 		Predictions []struct {
@@ -271,7 +278,7 @@ func Register(c *fiber.Ctx) error {
 	stmt, err := pgsql.Prepare(query)
 	if err != nil {
 		log.Println(err)
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
 			"message": "insert Failed",
 		})
@@ -281,7 +288,7 @@ func Register(c *fiber.Ctx) error {
 	err = stmt.QueryRow(body.Name, body.Email, body.Password).Scan(&lastID)
 	if err != nil {
 		log.Println(err)
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
 			"message": "insert Failed",
 		})
@@ -293,4 +300,18 @@ func Register(c *fiber.Ctx) error {
 		"msg":  "Registration successfull",
 		"data": userdetail,
 	})
+}
+
+func GetUser(c *fiber.Ctx) error {
+	body := []UserGetinfo{}
+	query := `SELECT * FROM "user"`
+	err := pgsql.Select(&body, query)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Get Failed",
+		})
+	}
+	return c.JSON(body)
 }

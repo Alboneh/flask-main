@@ -9,15 +9,13 @@
 
 <!-- Toolbar -->
 <div class="toolbar" role="banner">
-  <mat-toolbar color="primary">  
-    <h1>  
-    Leftover
-    </h1>  
-    <button mat-button routerLink="/">Home</button>  
+  <mat-toolbar color="primary">
+    <h1>Leftover</h1>
+    <button mat-button routerLink="/">Home</button>
+    <button mat-button routerLink="/grid">Users</button>
+    <span class="spacer"></span> <!-- Add a spacer to push the logout button to the right -->
+    <button mat-button color="warn" (click)="logout()">Logout</button>
   </mat-toolbar>
-  <router-outlet>
-
-  </router-outlet>
+  <router-outlet></router-outlet>
 </div>
-
 <router-outlet></router-outlet>

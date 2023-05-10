@@ -18,6 +18,13 @@ services:
     volumes:
       - ./api:/app
       - ./file:/app/file
+  angular-app:
+    container_name: angular-app
+    build: "./hello-world"
+    ports:
+      - 8080:80
+    volumes:
+      - ./hello-world:/app
   # nginx:
   #   build: "./nginx"
   #   ports:
