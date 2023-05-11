@@ -1,0 +1,7 @@
+tunnel: leftoverapi
+
+credentials-file: /home/ibrahim/.cloudflared/cert.pem
+
+ingress:
+  - hostname: leftoveradminapp.online
+    service: http://localhost:8080
