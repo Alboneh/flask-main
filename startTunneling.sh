@@ -3,4 +3,4 @@
 
 
 #start tunneling to expose localhost to domain
-cloudflared tunnel --config /path/to/config.yml
+cloudflared tunnel run --config ./config.yml

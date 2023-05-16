@@ -20,6 +20,7 @@ services:
       - ./file:/app/file
   angular-app:
     container_name: angular-app
+    restart: unless-stopped
     build: "./hello-world"
     ports:
       - 8080:80
@@ -31,8 +32,8 @@ services:
   #     - "80:80"
   db:
     image: postgres
+    restart: unless-stopped
     container_name: local_pgdatabase
-    restart: always
     environment:
          - POSTGRES_PASSWORD=root
          - POSTGRES_USER=root
@@ -45,7 +46,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: local_pgadmin
-    restart: always
+    restart: unless-stopped
     ports:
       - "5050:80"
     environment:
