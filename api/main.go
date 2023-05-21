@@ -34,6 +34,7 @@ func main() {
 	app.Post("/crudcsv", api.Create)
 	app.Put("/crudcsv", api.Update)
 	app.Delete("/crudcsv", api.Delete)
+	app.Get("/retrain_model", api.RetrainModel)
 
 	app.Listen(":3030")
 }

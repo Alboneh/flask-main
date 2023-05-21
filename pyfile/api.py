@@ -7,6 +7,7 @@ from database import init,getalluser,registerdb,logindb
 from flask_cors import CORS
 from waitress import serve
 from flask_swagger_ui import get_swaggerui_blueprint
+import pandas as pd
 
 #init flask and sql
 app = Flask(__name__)
@@ -89,6 +90,18 @@ def predictByProductName(product_name):
     except Exception as e:
          err = jsonify(msg=f'{e}'),500
          return err
+
+@app.route('/update_model', methods=['Get'])
+def update_model():
+    # Load the combined data (old data + new data) from a CSV file
+    combined_data = pd.read_csv("file/Groceries_dataset.csv")
+    
+    # Update the model with the combined data
+    preprocess.preprocess_new_data(combined_data)
+
+    # Retrain the model
+    success = preprocess.train_model()
+    return success
 
 @app.route('/register', methods=['POST'])
 def register():

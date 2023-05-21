@@ -185,6 +185,42 @@ func Predict(c *fiber.Ctx) error {
 	})
 }
 
+type RetrainStatus struct {
+	Success bool `json:"success"`
+}
+
+func RetrainModel(c *fiber.Ctx) error {
+
+	request, err := http.NewRequest("GET", "http://pythonapi:3000/update_model", nil)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	response, err := client.Do(request)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	data := RetrainStatus{}
+	err = json.NewDecoder(response.Body).Decode(&data)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	defer response.Body.Close()
+
+	if !data.Success {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+	})
+}
+
 func PredictProduct(c *fiber.Ctx) error {
 	product := c.Params("product_name")
 

@@ -71,3 +71,68 @@ class Preprocessing:
         forecast = model.predict(dataset)
 
         return forecast
+    
+    def update_model(self, new_data):
+        # Load the existing model
+        self.model = tf.keras.models.load_model(self.model_path)
+        
+        # Preprocess the new data
+        new_data = self.preprocess_new_data(new_data)
+        
+        # Append the new data to the existing data
+        updated_data = np.concatenate((self.data_asarray, new_data), axis=0)
+        
+        # Train the model with the updated data
+        self.train_model(updated_data)
+        
+        # Save the updated model
+        self.model.save(self.model_path)
+    
+    def preprocess_new_data(self, new_data):
+        df = pd.DataFrame(new_data)
+        df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d")
+        df["count"] = 1
+        grouped_data = df.groupby(["Date", "itemDescription"]).sum()
+        grouped_data.reset_index(inplace=True)
+
+        sparse_data = pd.pivot_table(grouped_data, values="count", columns="itemDescription", index="Date", aggfunc=np.sum)
+        sparse_data = sparse_data.applymap(lambda x: 0 if np.isnan(x) else x)
+
+        for column in sparse_data.columns:
+            if column not in self.columns_not_to_be_removed:
+                sparse_data.drop(column, axis=1, inplace=True)
+
+        new_data_asarray = sparse_data.values
+
+        # Concatenate the new data with the existing data
+        if self.data_asarray is None:
+            self.data_asarray = new_data_asarray
+        else:
+            self.data_asarray = np.concatenate((self.data_asarray, new_data_asarray), axis=0)
+
+    def train_model(self):
+        try:
+            dataset = tf.data.Dataset.from_tensor_slices(self.data_asarray)
+            dataset = dataset.window(self.window_size + 1, shift=1, drop_remainder=True)
+            dataset = dataset.flat_map(lambda w: w.batch(self.window_size + 1))
+            dataset = dataset.shuffle(buffer_size=1000).batch(self.batch_size).prefetch(1)
+
+            # Define and compile the model architecture
+            model = tf.keras.models.Sequential([
+                tf.keras.layers.Lambda(lambda x: x[:, :-1], input_shape=[None, self.data_asarray.shape[1]]),
+                tf.keras.layers.Dense(32, activation="relu"),
+                tf.keras.layers.Dense(self.data_asarray.shape[1])
+            ])
+
+            model.compile(loss=tf.keras.losses.MeanSquaredError(), optimizer=tf.keras.optimizers.Adam())
+
+            # Train the model
+            model.fit(dataset, epochs=10)
+
+            # Save the trained model
+            model.save(self.model_path)
+
+            return True
+        except Exception as e:
+            print("An error occurred during model training:", e)
+            return False
