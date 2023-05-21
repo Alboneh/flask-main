@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-chart">
+      <div class="card-header">
+        <h5 class="card-title">Food Supply Prediction</h5>
+        <p class="card-category">Bar Chart</p>
+        <div class="dropdown">
+          <div class="form-group">
+            <label for="filterSelect">Filter Chart:</label>
+            <select class="form-control" id="filterSelect" [(ngModel)]="selectedFilter" (change)="generateChart(selectedFilter)">
+              <option value="3" [selected]="selectedFilter === 3">Show 3 Days</option>
+              <option value="7" [selected]="selectedFilter === 7">Show 7 Days</option>
+              <option value="14" [selected]="selectedFilter === 14">Show 14 Days</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <canvas id="supplyChart" width="400" height="100"></canvas>
+      </div>
+      <div class="card-footer">
+        <hr/>
+        <div class="card-stats">
+          <i class="fa fa-check"></i> Data information certified
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 mt-5 mb-3">
+    <h1 class="text-center mb-4"> <u>Weekly Food Stock Prediction</u></h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-3" *ngFor="let item of data">
+  <div class="card card-stats ml-2" style="cursor: pointer !important;" (click)="open(mymodal, item)">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-5 col-md-4">
+            <div class="icon-big text-center icon-warning">
+              <i class="fa fa-shopping-basket text-warning"></i>
+            </div>
+          </div>
+          <div class="col-7 col-md-8">
+            <div class="numbers">
+              <p class="card-category">{{ item.product_name }}</p>
+              <p class="card-title">{{ getForecastSum(item) || '-' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <hr>
+        <div class="stats">
+          <i></i> items per week
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+   
+<!-- <button class="btn btn-lg btn-outline-primary" (click)="open(mymodal)">Open My Modal</button> -->
+   
+<!-- <ng-template #mymodal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    This is example from ItSolutionStuff.com
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+  </div>
+</ng-template> -->
+
+<ng-template #mymodal let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">{{ detailData.product_name }}</h5>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngFor="let prediction of detailData.predictions" class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ prediction.date | date:'EEEE' }}</h5>
+          <hr> <!-- Add the divider line -->
+          <p><b>Date:</b> {{ prediction.date }}</p>
+          <p> <b>Forecasted Stock:</b> {{ prediction.forecast }}</p>
+          <p> <b> Actual Stock Needed:</b> {{ prediction.real }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,64 @@
+
+<div class="button-group">
+    <button class="btn" (click)="open(myform,'create')" >
+      <i class="fa fa-plus"></i>
+      <span class="icon-label">Create</span>
+    </button>
+    <button class="btn" (click)="open(myform,'edit')">
+      <i class="fa fa-pencil"></i>
+      <span class="icon-label">Update</span>
+    </button>
+    <button class="btn"  (click)="deleteAction()">
+      <i class="fa fa-trash"></i>
+      <span class="icon-label">Delete</span>
+    </button>
+  </div>
+  <div style="width: 100%; height: 500px;">
+    <ag-grid-angular
+      style="width: 100%; height: 100%;"
+      class="ag-theme-alpine"
+      [columnDefs]="columnDefs"
+      [rowData]="rowData"
+      [defaultColDef]="defaultColDef"
+      [pagination]="true"
+      [getRowId]="getRowId"
+      (gridReady)="onGridReady($event)"
+      rowSelection="single"
+    ></ag-grid-angular>
+  </div>
+
+<ng-template #myform let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">{{ dialogHeader }}</h5>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Close click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="submitAction()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <select class="form-control" id="name" formControlName="name">
+            <option *ngFor="let product of productList" [value]="product.name">{{ product.name }}</option>
+          </select>
+        </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" class="form-control" id="date" formControlName="date">
+          </div>
+          <div class="form-group">
+            <label for="count">Count</label>
+            <input type="number" class="form-control" id="count" formControlName="count">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary"(click)="modal.dismiss('Close click')">Cancel</button>
+      </div>
+    </form>>
+  </div>
+</ng-template>
+  
+  
+  

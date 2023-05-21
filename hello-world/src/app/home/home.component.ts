@@ -103,37 +103,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // uploadFile(event: Event): void {
-  //   // Get the form control value
-  // const fileControlValue = this.formGroup.get('file')?.value;
-
-  // // Check if the value is not null
-  // if (fileControlValue) {
-  //   // Cast the value to File type
-  //   const file: File = fileControlValue as File;
-
-  //   // Create a new FormData object
-  //   const formData = new FormData();
-
-  //   // Append the file to the FormData object
-  //   formData.append('file', file);
-  
-  //  const headers = new HttpHeaders().set('Content-Type', 'multipart/form-data').set('Authorization', `Bearer ${this.token}`);
-  
-  //   const options = { headers: headers };
-  
-  //   this.http.post<CheckFile>(`${this.apiUrl}/upload`, formData, options).subscribe(
-  //     (response: CheckFile) => {
-  //       if (response.success) {
-  //         window.location.reload();
-  //       }
-  //     },
-  //   );
-  // }
-  // }
-
-  
-
   ngOnInit(): void {
     this.checkFile();
   }

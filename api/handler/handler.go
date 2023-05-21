@@ -2,11 +2,15 @@ package api
 
 import (
 	"api/db"
+	"encoding/csv"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,6 +18,13 @@ import (
 )
 
 type Logininfo struct {
+	Name     string `json:"name" db:"name"`
+	Password string `json:"password" db:"password"`
+	Email    string `json:"email" db:"email"`
+}
+
+type Editinfo struct {
+	ID       int    `json:"id" db:"id"`
 	Name     string `json:"name" db:"name"`
 	Password string `json:"password" db:"password"`
 	Email    string `json:"email" db:"email"`
@@ -57,6 +68,18 @@ type PredictProductData struct {
 		Real     string  `json:"real"`
 	} `json:"predictions"`
 	ProductName string `json:"product_name"`
+}
+
+type CSVData struct {
+	Product string `json:"product_name"`
+	Date    string `json:"date"`
+	Count   int    `json:"count"`
+}
+
+type InputData struct {
+	Name  string `json:"name"`
+	Date  string `json:"date"`
+	Count int    `json:"count"`
 }
 
 var pgsql = db.Client
@@ -302,6 +325,65 @@ func Register(c *fiber.Ctx) error {
 	})
 }
 
+func UserEdit(c *fiber.Ctx) error {
+	body := Logininfo{}
+	if err := c.BodyParser(&body); err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"success": false,
+			"message": "Can't parse the data",
+		})
+	}
+
+	id := c.Params("id")
+
+	query := `UPDATE "user" SET name = $1, email = $2, password = $3 WHERE id = $4`
+
+	stmt, err := pgsql.Prepare(query)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Update Failed",
+		})
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(body.Name, body.Email, body.Password, id)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Update Failed",
+		})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"success": true,
+		"message": "Update Success",
+	})
+}
+
+func UserDelete(c *fiber.Ctx) error {
+
+	Id := c.Params("id")
+
+	query := `DELETE FROM "user" WHERE id =` + Id
+
+	_, err := pgsql.Exec(query)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Delete Failed",
+		})
+	}
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"success": true,
+		"message": "Delete Success",
+	})
+}
+
 func GetUser(c *fiber.Ctx) error {
 	body := []UserGetinfo{}
 	query := `SELECT * FROM "user"`
@@ -314,4 +396,319 @@ func GetUser(c *fiber.Ctx) error {
 		})
 	}
 	return c.JSON(body)
+}
+
+func GetOriginData(c *fiber.Ctx) error {
+	filepath := `/app/file/Groceries_dataset.csv`
+	file, err := readCSV(filepath)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Get CSV Failed",
+		})
+	}
+	return c.JSON(file)
+
+}
+func Create(c *fiber.Ctx) error {
+	filepath := `/app/file/Groceries_dataset.csv`
+	body := InputData{}
+	err := c.BodyParser(&body)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Parse Failed",
+		})
+	}
+	err = addDataToCSV(filepath, body)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Create Failed",
+		})
+	}
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"success": true,
+		"message": "Data Created",
+	})
+}
+
+func Update(c *fiber.Ctx) error {
+	filepath := `/app/file/Groceries_dataset.csv`
+	body := InputData{}
+	err := c.BodyParser(&body)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Parse Failed",
+		})
+	}
+	err = updateDataInCSV(filepath, body)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Update Failed",
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"message": "Data Updated",
+	})
+}
+
+func Delete(c *fiber.Ctx) error {
+	filepath := `/app/file/Groceries_dataset.csv`
+	body := InputData{}
+	err := c.BodyParser(&body)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Parse Failed",
+		})
+	}
+	err = deleteDataByProduct(filepath, body)
+	if err != nil {
+		log.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Delete Failed",
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"message": "Data Deleted",
+	})
+}
+
+func readCSV(filename string) ([]CSVData, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	dataList := []CSVData{}
+
+	// Skip the header row if present
+	if _, err := reader.Read(); err != nil {
+		return nil, err
+	}
+	for {
+		row, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+
+		productName := row[2] // Assuming product name is in the third column (index 2)
+		date := row[1]        // Assuming date is in the second column (index 1)
+
+		// Find if the entry already exists in dataList
+		found := false
+		for i := range dataList {
+			if dataList[i].Product == productName && dataList[i].Date == date {
+				// Increment the Count field if the entry already exists
+				dataList[i].Count++
+				found = true
+				break
+			}
+		}
+
+		// If the entry doesn't exist, create a new one
+		if !found {
+			data := CSVData{
+				Product: productName,
+				Date:    date,
+				Count:   1,
+			}
+			dataList = append(dataList, data)
+		}
+	}
+	return dataList, nil
+}
+
+func addDataToCSV(filename string, body InputData) error {
+	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	for i := 0; i < body.Count; i++ {
+		memberNumber := strconv.Itoa(rand.Intn(9000) + 1000) // Generate random 4-digit member number
+		data := []string{memberNumber, body.Date, body.Name}
+		err = writer.Write(data)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func updateDataInCSV(filename string, body InputData) error {
+	var existingData [][]string
+	var totalCount int
+	var newRows [][]string
+
+	file, err := os.OpenFile(filename, os.O_RDWR, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	existingData, err = reader.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	header := existingData[0]
+	existingData = existingData[1:] // Exclude the header from existing data
+
+	// Count the existing rows matching the date and product_name
+	for _, row := range existingData {
+		if row[1] == body.Date && row[2] == body.Name {
+			totalCount++
+		}
+	}
+
+	if totalCount < body.Count {
+		diff := body.Count - totalCount
+		// Add additional entries
+		for i := 0; i < diff; i++ {
+			memberNumber := strconv.Itoa(rand.Intn(9000) + 1000) // Generate random 4-digit member number
+			newRow := []string{memberNumber, body.Date, body.Name}
+			newRows = append(newRows, newRow)
+		}
+		// Write the new rows
+		writer := csv.NewWriter(file)
+		defer writer.Flush()
+		for _, newRow := range newRows {
+			err = writer.Write(newRow)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if totalCount > body.Count {
+		// Delete excess entries
+		excessCount := body.Count
+		newCount := 0
+		for _, row := range existingData {
+			if row[1] == body.Date && row[2] == body.Name {
+				newCount++
+				if newCount > excessCount {
+					continue // Skip excess rows
+				}
+			}
+			newRows = append(newRows, row) // Collect non-excess rows
+		}
+
+		// Create a temporary file to write the updated data
+		tempFilename := filename + ".tmp"
+		tempFile, err := os.Create(tempFilename)
+		if err != nil {
+			return err
+		}
+		defer tempFile.Close()
+
+		writer := csv.NewWriter(tempFile)
+		defer writer.Flush()
+
+		// Write the header to the temporary file
+		err = writer.Write(header)
+		if err != nil {
+			return err
+		}
+
+		// Write the new rows to the temporary file
+		for _, newRow := range newRows {
+			err = writer.Write(newRow)
+			if err != nil {
+				return err
+			}
+		}
+
+		// Rename the temporary file to the original filename
+		err = os.Rename(tempFilename, filename)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func deleteDataByProduct(filename string, body InputData) error {
+	var existingData [][]string
+	var newData [][]string
+
+	file, err := os.OpenFile(filename, os.O_RDWR, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	existingData, err = reader.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	header := existingData[0]
+	existingData = existingData[1:] // Exclude the header from existing data
+
+	// Collect the rows that don't match the specified product
+	for _, row := range existingData {
+		if row[1] != body.Date || row[2] != body.Name {
+			newData = append(newData, row)
+		}
+	}
+
+	// Create a temporary file to write the updated data
+	tempFilename := filename + ".tmp"
+	tempFile, err := os.Create(tempFilename)
+	if err != nil {
+		return err
+	}
+	defer tempFile.Close()
+
+	writer := csv.NewWriter(tempFile)
+	defer writer.Flush()
+
+	// Write the header to the temporary file
+	err = writer.Write(header)
+	if err != nil {
+		return err
+	}
+
+	// Write the remaining rows to the temporary file
+	for _, row := range newData {
+		err = writer.Write(row)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Rename the temporary file to the original filename
+	err = os.Rename(tempFilename, filename)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

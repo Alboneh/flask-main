@@ -1,0 +1,5 @@
+/* Adjust the height and max-height of the dropdown container */
+.form-control {
+    height: auto;
+    max-height: none;
+  }

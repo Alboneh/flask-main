@@ -16,6 +16,9 @@ func main() {
 	app.Get("/", api.Get)
 	app.Post("/login", api.Login)
 	app.Post("/register", api.Register)
+	app.Put("/register/:id", api.UserEdit)
+	app.Delete("/register/:id", api.UserDelete)
+
 	app.Get("/download", api.Download)
 
 	// JWT Middleware
@@ -27,6 +30,10 @@ func main() {
 	app.Post("/upload", api.UploadFIle)
 	app.Get("/check", api.Checkfile)
 	app.Get("/users", api.GetUser)
+	app.Get("/readcsv", api.GetOriginData)
+	app.Post("/crudcsv", api.Create)
+	app.Put("/crudcsv", api.Update)
+	app.Delete("/crudcsv", api.Delete)
 
 	app.Listen(":3030")
 }

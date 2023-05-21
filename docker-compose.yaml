@@ -6,13 +6,13 @@ services:
     volumes:
          - ./pyfile:/app
          - ./file:/app/file
-    restart: unless-stopped
+    restart: no
     ports:
       - "3000:3000"
   golangapi:
     container_name: golangapi
     build: "./api"  
-    restart: unless-stopped
+    restart: no
     ports:
       - "3030:3030"
     volumes:
@@ -20,19 +20,20 @@ services:
       - ./file:/app/file
   angular-app:
     container_name: angular-app
-    build: "./hello-world"
+    restart: no
+    build: "./leftover-admin"
     ports:
       - 8080:80
     volumes:
-      - ./hello-world:/app
+      - ./leftover-admin:/app
   # nginx:
   #   build: "./nginx"
   #   ports:
   #     - "80:80"
   db:
     image: postgres
+    restart: no
     container_name: local_pgdatabase
-    restart: always
     environment:
          - POSTGRES_PASSWORD=root
          - POSTGRES_USER=root
@@ -45,7 +46,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: local_pgadmin
-    restart: always
+    restart: no
     ports:
       - "5050:80"
     environment:
