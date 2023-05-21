@@ -5,7 +5,6 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
@@ -255,7 +254,7 @@ func UploadFIle(c *fiber.Ctx) error {
 func Download(c *fiber.Ctx) error {
 	// Read the file from the disk
 	filePath := "/app/file/Groceries_dataset.csv"
-	fileData, err := ioutil.ReadFile(filePath)
+	fileData, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
