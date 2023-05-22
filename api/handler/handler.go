@@ -16,71 +16,6 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type Logininfo struct {
-	Name     string `json:"name" db:"name"`
-	Password string `json:"password" db:"password"`
-	Email    string `json:"email" db:"email"`
-}
-
-type Editinfo struct {
-	ID       int    `json:"id" db:"id"`
-	Name     string `json:"name" db:"name"`
-	Password string `json:"password" db:"password"`
-	Email    string `json:"email" db:"email"`
-}
-
-type Userinfo struct {
-	Username string `json:"username" db:"username"`
-	Email    string `json:"email" db:"email"`
-}
-
-type Registerinfo struct {
-	ID       int    `json:"id" db:"id"`
-	Username string `json:"username" db:"username"`
-	Email    string `json:"email" db:"email"`
-	Password string `json:"password" db:"password"`
-}
-
-type UserGetinfo struct {
-	ID       int    `json:"id" db:"id"`
-	Name     string `json:"name" db:"name"`
-	Email    string `json:"email" db:"email"`
-	Password string `json:"password" db:"password"`
-}
-
-type PredictData struct {
-	Data []struct {
-		Predictions []struct {
-			Date     string  `json:"date"`
-			Forecast float64 `json:"forecast"`
-			Real     string  `json:"real"`
-		} `json:"predictions"`
-		ProductName string `json:"product_name"`
-	} `json:"data"`
-	Success string `json:"success"`
-}
-
-type PredictProductData struct {
-	Predictions []struct {
-		Date     string  `json:"date"`
-		Forecast float64 `json:"forecast"`
-		Real     string  `json:"real"`
-	} `json:"predictions"`
-	ProductName string `json:"product_name"`
-}
-
-type CSVData struct {
-	Product string `json:"product_name"`
-	Date    string `json:"date"`
-	Count   int    `json:"count"`
-}
-
-type InputData struct {
-	Name  string `json:"name"`
-	Date  string `json:"date"`
-	Count int    `json:"count"`
-}
-
 var pgsql = db.Client
 
 func Get(c *fiber.Ctx) error {
@@ -117,45 +52,6 @@ func Login(c *fiber.Ctx) error {
 	})
 }
 
-// hmsswww
-func login(data Logininfo) (string, error) {
-
-	response := Logininfo{}
-
-	query := `SELECT name,password FROM "user" WHERE 1=1 AND`
-	if data.Name != "" {
-		query += ` name ='` + data.Name + `'`
-	} else {
-		query += ` email ='` + data.Email + `'`
-	}
-
-	log.Println(query)
-
-	err := pgsql.Get(&response, query)
-	if err != nil {
-		log.Println(err)
-		return "", err
-	}
-
-	// Create the Claims
-	claims := jwt.MapClaims{
-		"name":  data.Name,
-		"admin": true,
-		"exp":   time.Now().Add(time.Hour * 720).Unix(),
-	}
-
-	// Create token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Generate encoded token and send it as response.
-	t, err := token.SignedString([]byte("secret"))
-	if err != nil {
-		log.Printf("token.SignedString: %v", err)
-		return "", err
-	}
-	return t, nil
-}
-
 var client = &http.Client{}
 
 func Predict(c *fiber.Ctx) error {
@@ -184,11 +80,6 @@ func Predict(c *fiber.Ctx) error {
 		"data":    data.Data,
 	})
 }
-
-type RetrainStatus struct {
-	Success bool `json:"success"`
-}
-
 func RetrainModel(c *fiber.Ctx) error {
 
 	request, err := http.NewRequest("GET", "http://pythonapi:3000/update_model", nil)
@@ -749,4 +640,43 @@ func deleteDataByProduct(filename string, body InputData) error {
 	}
 
 	return nil
+}
+
+// hmsswww
+func login(data Logininfo) (string, error) {
+
+	response := Logininfo{}
+
+	query := `SELECT name,password FROM "user" WHERE 1=1 AND`
+	if data.Name != "" {
+		query += ` name ='` + data.Name + `'`
+	} else {
+		query += ` email ='` + data.Email + `'`
+	}
+
+	log.Println(query)
+
+	err := pgsql.Get(&response, query)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	// Create the Claims
+	claims := jwt.MapClaims{
+		"name":  data.Name,
+		"admin": true,
+		"exp":   time.Now().Add(time.Hour * 720).Unix(),
+	}
+
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Generate encoded token and send it as response.
+	t, err := token.SignedString([]byte("secret"))
+	if err != nil {
+		log.Printf("token.SignedString: %v", err)
+		return "", err
+	}
+	return t, nil
 }

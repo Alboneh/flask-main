@@ -15,7 +15,7 @@ CORS(app)
 mysql = init()
 
 #load tensorflow model
-preprocess = Preprocessing("model.h5")
+preprocess = Preprocessing("file/model.h5")
 prediction_results = preprocess.predict()
 
 #JWT

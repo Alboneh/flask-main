@@ -39,7 +39,7 @@ class Preprocessing:
         latest_date = raw_data["Date"].max()
         
         # Generate the prediction dates starting from the day after the latest date
-        self.dates = [str((latest_date + pd.Timedelta(days=i+1)).date()) for i in range(14)]
+        self.dates = [str((latest_date + pd.Timedelta(days=i+1)).date()).replace("-", "/") for i in range(14)]
 
     def predict(self):
         self.sparse_data()

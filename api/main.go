@@ -18,8 +18,12 @@ func main() {
 	app.Post("/register", api.Register)
 	app.Put("/register/:id", api.UserEdit)
 	app.Delete("/register/:id", api.UserDelete)
-
 	app.Get("/download", api.Download)
+
+	//android app request
+	app.Get("/android", api.Get)
+	app.Post("/android/login", api.Login)
+	app.Post("/android/register", api.Register)
 
 	// JWT Middleware
 	app.Use(jwtware.New(jwtware.Config{
@@ -27,6 +31,7 @@ func main() {
 	}))
 	app.Get("/predict", api.Predict)
 	app.Get("/predict/:product_name", api.PredictProduct)
+
 	app.Post("/upload", api.UploadFIle)
 	app.Get("/check", api.Checkfile)
 	app.Get("/users", api.GetUser)
@@ -35,6 +40,11 @@ func main() {
 	app.Put("/crudcsv", api.Update)
 	app.Delete("/crudcsv", api.Delete)
 	app.Get("/retrain_model", api.RetrainModel)
+
+	//android app request
+	app.Get("/android/predict", api.PredictAPI)
+	app.Get("/android/predict/:product_name", api.PredictProductAPI)
+	app.Post("/android/predict/:product_name", api.InputPredictProductAPI)
 
 	app.Listen(":3030")
 }
