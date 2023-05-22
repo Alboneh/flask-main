@@ -5,7 +5,6 @@ import { UserComponent } from '../../pages/user/user.component';
 import { TableComponent } from '../../pages/table/table.component';
 import { IconsComponent } from '../../pages/icons/icons.component';
 import { NotificationsComponent } from '../../pages/notifications/notifications.component';
-import { LoginComponent } from 'src/app/pages/login/login.component';
 import { UserlistComponent } from 'src/app/pages/userlist/userlist.component';
 import { CsvdataComponent } from 'src/app/pages/csvdata/csvdata.component';
 

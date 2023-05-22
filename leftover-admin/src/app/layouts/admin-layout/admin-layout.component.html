@@ -1,12 +1,17 @@
 <div class="wrapper">
-    <div class="sidebar" data-color="white" data-active-color="danger">
-        <sidebar-cmp></sidebar-cmp>
-    </div>
-    <div class="main-panel">
-        <navbar-cmp></navbar-cmp>
-        <div class="content">
-            <router-outlet></router-outlet>
+    <ng-container *ngIf="isLoading; else content">
+        <app-load></app-load>
+    </ng-container>
+    <ng-template #content>
+        <div class="sidebar" data-color="white" data-active-color="danger">
+            <sidebar-cmp></sidebar-cmp>
         </div>
-        <footer-cmp></footer-cmp>
-    </div>
+        <div class="main-panel">
+            <navbar-cmp></navbar-cmp>
+            <div class="content">
+                <router-outlet></router-outlet>
+            </div>
+            <footer-cmp></footer-cmp>
+        </div>
+    </ng-template>
 </div>

@@ -6,7 +6,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { ToastrService } from 'ngx-toastr';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { log } from 'console';
+import { LoadingComponent } from 'src/app/shared/loading/loading.component';
+import { LoadingService } from 'src/app/shared/loading/loading.service';
 
 
 interface httpResp {
@@ -51,6 +52,7 @@ export class CsvdataComponent implements OnInit {
         private modalService: NgbModal,
         private toastr: ToastrService,
         private datePipe: DatePipe,
+        private loadingService: LoadingService,
       ){
     this.columnDefs = [
       { headerName: 'ID', field: 'id' , valueGetter: "node.rowIndex + 1" },
@@ -264,11 +266,14 @@ export class CsvdataComponent implements OnInit {
   }
 
   retrainData() {
+    this.loadingService.setLoadingState(true);
     this.http.get<any>(`${this.apiUrl}/retrain_model`, { headers: this.headers }).subscribe(
       (response: httpResp) => {
+        this.loadingService.setLoadingState(false);
           this.toastr.success('Retrain Success!', 'Success');
       },
       (error: any) => {
+        this.loadingService.setLoadingState(false);
         this.toastr.error(error.error.message, 'Retrain Failed');
         // Handle the error, e.g., show an error message
       }

@@ -25,6 +25,7 @@ import { UserlistComponent } from './pages/userlist/userlist.component';
 import { AgGridModule } from "ag-grid-angular";
 import { CsvdataComponent } from './pages/csvdata/csvdata.component';
 import { DatePipe } from "@angular/common";
+import { LoadingComponent } from './shared/loading/loading.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { DatePipe } from "@angular/common";
     AdminLayoutComponent,
     LoginComponent,
     UserlistComponent,
-    CsvdataComponent
+    CsvdataComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserAnimationsModule,
