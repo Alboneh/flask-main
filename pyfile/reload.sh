@@ -12,7 +12,7 @@ PID=$!
 while true
 do
   echo "Watching for changes..."
-  inotifywait -r -e modify,create,delete --exclude '\./vendor/.*' /app
+  inotifywait -r -e modify,create,delete --exclude './model.h5' /app
 
   # Send a SIGTERM signal to the process
   echo "Stopping the process..."

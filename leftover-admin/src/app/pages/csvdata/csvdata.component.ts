@@ -263,6 +263,18 @@ export class CsvdataComponent implements OnInit {
     );
   }
 
+  retrainData() {
+    this.http.get<any>(`${this.apiUrl}/retrain_model`, { headers: this.headers }).subscribe(
+      (response: httpResp) => {
+          this.toastr.success('Retrain Success!', 'Success');
+      },
+      (error: any) => {
+        this.toastr.error(error.error.message, 'Retrain Failed');
+        // Handle the error, e.g., show an error message
+      }
+    );
+  }
+
   ngOnInit(): void {
     this.reload();
     this.formGroup = this.formBuilder.group({

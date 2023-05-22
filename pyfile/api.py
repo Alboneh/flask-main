@@ -91,7 +91,7 @@ def predictByProductName(product_name):
          err = jsonify(msg=f'{e}'),500
          return err
 
-@app.route('/update_model', methods=['Get'])
+@app.route('/update_model', methods=['GET'])
 def update_model():
     # Load the combined data (old data + new data) from a CSV file
     combined_data = pd.read_csv("file/Groceries_dataset.csv")
@@ -101,7 +101,9 @@ def update_model():
 
     # Retrain the model
     success = preprocess.train_model()
-    return success
+    if success:
+            return jsonify(success=True)
+    return jsonify(success=False)
 
 @app.route('/register', methods=['POST'])
 def register():

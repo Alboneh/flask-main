@@ -10,6 +10,7 @@ class Preprocessing:
         self.columns_not_to_be_removed = columns_not_to_be_removed
         self.data_name = data_name
         self.model = tf.keras.models.load_model(model_path)
+        self.model_path = model_path
         self.data_asarray = None
         self.columns = None
         self.dates = None
@@ -46,6 +47,9 @@ class Preprocessing:
         forecast = self.model_forecast(self.model, self.data_asarray[714 - self.window_size:-1], self.window_size, self.batch_size)
         results = forecast.squeeze()
 
+        # Reshape the results array to have a 2-dimensional shape
+        results = np.reshape(results, (-1, len(self.columns)))
+
         prediction_df = pd.DataFrame(np.abs(np.round(results + 0.25)), columns=list(self.columns))
 
         pred_list = []
@@ -72,25 +76,10 @@ class Preprocessing:
 
         return forecast
     
-    def update_model(self, new_data):
-        # Load the existing model
-        self.model = tf.keras.models.load_model(self.model_path)
-        
-        # Preprocess the new data
-        new_data = self.preprocess_new_data(new_data)
-        
-        # Append the new data to the existing data
-        updated_data = np.concatenate((self.data_asarray, new_data), axis=0)
-        
-        # Train the model with the updated data
-        self.train_model(updated_data)
-        
-        # Save the updated model
-        self.model.save(self.model_path)
-    
+   
     def preprocess_new_data(self, new_data):
         df = pd.DataFrame(new_data)
-        df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d")
+        df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
         df["count"] = 1
         grouped_data = df.groupby(["Date", "itemDescription"]).sum()
         grouped_data.reset_index(inplace=True)
@@ -110,6 +99,9 @@ class Preprocessing:
         else:
             self.data_asarray = np.concatenate((self.data_asarray, new_data_asarray), axis=0)
 
+        return self.data_asarray
+
+
     def train_model(self):
         try:
             dataset = tf.data.Dataset.from_tensor_slices(self.data_asarray)
@@ -117,9 +109,12 @@ class Preprocessing:
             dataset = dataset.flat_map(lambda w: w.batch(self.window_size + 1))
             dataset = dataset.shuffle(buffer_size=1000).batch(self.batch_size).prefetch(1)
 
+            # Split the dataset into input and target
+            dataset = dataset.map(lambda x: (x[:, :-1], x[:, -1:]))
+
             # Define and compile the model architecture
             model = tf.keras.models.Sequential([
-                tf.keras.layers.Lambda(lambda x: x[:, :-1], input_shape=[None, self.data_asarray.shape[1]]),
+                tf.keras.layers.Lambda(lambda x: x[:, :-1], input_shape=[self.window_size, self.data_asarray.shape[1]]),
                 tf.keras.layers.Dense(32, activation="relu"),
                 tf.keras.layers.Dense(self.data_asarray.shape[1])
             ])

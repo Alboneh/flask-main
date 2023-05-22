@@ -203,6 +203,7 @@ func RetrainModel(c *fiber.Ctx) error {
 		return err
 	}
 	data := RetrainStatus{}
+
 	err = json.NewDecoder(response.Body).Decode(&data)
 	if err != nil {
 		log.Println(err)
@@ -214,10 +215,12 @@ func RetrainModel(c *fiber.Ctx) error {
 	if !data.Success {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
+			"message": "Retrain Failed",
 		})
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": true,
+		"message": "Retrain Success",
 	})
 }
 
