@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -63,51 +64,43 @@ func PredictProductAPI(c *fiber.Ctx) error {
 
 func InputPredictProductAPI(c *fiber.Ctx) error {
 
-	body := InputProduct{}
-
-	if err := c.BodyParser(&body); err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"success": false,
-			"message": "Can't parse the data",
-		})
-	}
+	date := c.FormValue("input_date")
+	soldStr := c.FormValue("sold")
 
 	product := c.Params("product_name")
 
-	// Convert the body data to JSON bytes
-	jsonData, err := json.Marshal(body)
+	urls := "https://leftoverpy.serveo.net/predict/" + product
+
+	formData := url.Values{}
+	formData.Set("input_date", date)
+	formData.Set("sold", soldStr)
+
+	// Encode the form data
+	payload := bytes.NewBufferString(formData.Encode())
+
+	// Create the HTTP request
+	req, err := http.NewRequest("POST", urls, payload)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
+	// Set the content type header
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	// Create a new request with the specified method, URL, and body
-	request, err := http.NewRequest("POST", "https://leftoverpy.serveo.net/predict/"+product, bytes.NewBuffer(jsonData))
+	// Send the HTTP request
+	client := http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
-
-	// Set the appropriate headers if needed
-	request.Header.Set("Content-Type", "application/json")
-
-	// Send the request and handle the response
-	client := &http.Client{}
-	response, err := client.Do(request)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	defer response.Body.Close()
-
 	data := PredictProductData{}
-	err = json.NewDecoder(response.Body).Decode(&data)
+	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
 
-	defer response.Body.Close()
+	defer resp.Body.Close()
 	return c.Status(fiber.StatusOK).JSON(data)
 }

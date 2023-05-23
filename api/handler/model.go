@@ -1,5 +1,7 @@
 package api
 
+import "encoding/json"
+
 type Logininfo struct {
 	Name     string `json:"name" db:"name"`
 	Password string `json:"password" db:"password"`
@@ -35,9 +37,9 @@ type UserGetinfo struct {
 type PredictData struct {
 	Data []struct {
 		Predictions []struct {
-			Date     string  `json:"date"`
-			Forecast float64 `json:"forecast"`
-			Real     string  `json:"real"`
+			Date     string          `json:"date"`
+			Forecast float64         `json:"forecast"`
+			Real     json.RawMessage `json:"real"`
 		} `json:"predictions"`
 		ProductName string `json:"product_name"`
 	} `json:"data"`
@@ -46,9 +48,9 @@ type PredictData struct {
 
 type PredictProductData struct {
 	Predictions []struct {
-		Date     string  `json:"date"`
-		Forecast float64 `json:"forecast"`
-		Real     string  `json:"real"`
+		Date     string          `json:"date"`
+		Forecast float64         `json:"forecast"`
+		Real     json.RawMessage `json:"real"`
 	} `json:"predictions"`
 	ProductName string `json:"product_name"`
 }
